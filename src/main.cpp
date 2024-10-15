@@ -15,7 +15,8 @@ MotorGroup mRights({10, 9, 8}); // right motors on ports 4, 5, 16
 Motor mIntake(5);
 Motor mArm(20);
 Imu imu(18);
-Distance dist(1);
+Distance sDist(1);
+Optical sOpt(2);
 adi::Port leftClamp ('A', E_ADI_DIGITAL_OUT); //basic ADI output port declaration. The syntax is unique in LemLib
 adi::Port rightClamp ('B', E_ADI_DIGITAL_OUT); //even different than PROS + EZTemplate or PROS + OkapiLib
 
@@ -178,18 +179,35 @@ void progSkills(){
 void intakeDist(){
 	int i = 2;
 	mIntake.move(127);
-	if(dist.get_distance()*10 < 11 && dist.get_object_velocity() > 0){
+	if(sDist.get_distance() < 11 && sDist.get_object_velocity() > 0){
 		mIntake.move(50);
 	}
 	while(i>=0){
-		/*
-		get_encoder_units()) % 430 == 0){
+		if (mIntake.get_encoder_units() % 430 == 0){
 			mIntake.brake();
 			i--;
 		}
-		*/
 	}
 	mIntake.brake();
+}
+
+void intakeColorRed(){
+	if(sOpt.get_hue() == 0){
+		intakeDist();
+	}
+	else{
+		mIntake.brake();
+	}
+	
+}
+
+void intakeColorBlue(){
+	if(sOpt.get_hue() == 240){
+		intakeDist();
+	}
+	else{
+		mIntake.brake();
+	}
 }
 
 void autonomous() {
