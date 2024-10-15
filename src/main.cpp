@@ -179,16 +179,9 @@ void progSkills(){
 void intakeDist(){
 	int i = 2;
 	mIntake.move(127);
-	if(sDist.get_distance() < 11 && sDist.get_object_velocity() > 0){
-		mIntake.move(50);
+	if(sDist.get_distance() < 5 && sDist.get_object_velocity() > 0){
+		mIntake.brake();
 	}
-	while(i>=0){
-		if (mIntake.get_encoder_units() % 430 == 0){
-			mIntake.brake();
-			i--;
-		}
-	}
-	mIntake.brake();
 }
 
 void intakeColorRed(){
