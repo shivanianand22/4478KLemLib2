@@ -10,11 +10,11 @@ using namespace pros;
 using namespace lemlib;
 
 Controller controller(E_CONTROLLER_MASTER);
-MotorGroup mLefts({7, 19, 6}); // left motors on ports 1, 2, 3
-MotorGroup mRights({10, 9, 8}); // right motors on ports 4, 5, 16
-Motor mIntake(5);
-Motor mArm(20);
-Imu imu(18);
+MotorGroup mLefts({16, 20, 6}); // left motors forward (positive)
+MotorGroup mRights({-18, -19, -8}); // right motors reverse (negative)
+Motor mIntake(15);
+Motor mArm(13);
+Imu imu(17);
 Distance sDist(1);
 Optical sOpt(2);
 adi::Port leftClamp ('A', E_ADI_DIGITAL_OUT); //basic ADI output port declaration. The syntax is unique in LemLib
@@ -24,7 +24,7 @@ adi::Port rightClamp ('B', E_ADI_DIGITAL_OUT); //even different than PROS + EZTe
 Drivetrain drivetrain(&mLefts, // left motor group
                               &mRights, // right motor group
                               11.25, // 11.25 inch track width
-                              Omniwheel::OLD_275, // using old 2.75" omnis
+                              Omniwheel::NEW_275, // using new 2.75" omnis
                               450, // drivetrain rpm is 450
                               2 // horizontal drift is 2 (for now)
 );
