@@ -10,8 +10,8 @@ using namespace pros;
 using namespace lemlib;
 
 Controller controller(E_CONTROLLER_MASTER);
-MotorGroup mLefts({16, 20, 6}); // left motors forward (positive)
-MotorGroup mRights({-18, -19, -8}); // right motors reverse (negative)
+MotorGroup mLefts({-16, -20, -6}); // left motors forward (negitve)
+MotorGroup mRights({18, 19, 8}); // right motors reverse (positve)
 Motor mIntake(15);
 Motor mArm(13);
 Imu imu(17);
@@ -53,11 +53,11 @@ ControllerSettings lateral_controller(10, // proportional gain (kP)
 ControllerSettings angular_controller(2, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               10, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in degrees
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in degrees
-                                              500, // large error range timeout, in milliseconds
+                                              0, // anti windup
+                                              0, // small error range, in degrees
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in degrees
+                                              0, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
@@ -159,8 +159,7 @@ ASSET(redRightFullAWP_txt);
 
 void test(){
 	chassis.setPose(0,0,0);
-	chassis.moveToPoint(10, 10, 4000); // move the chassis to (10, 10)
-	chassis.moveToPose(20,20,90,4000); //move the chassis to (20, 20) facing 90 deg
+	chassis.turnToHeading(90, 100000);
 }
 
 void blueRightFull(){
