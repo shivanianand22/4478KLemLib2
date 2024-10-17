@@ -41,12 +41,12 @@ OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
 ControllerSettings lateral_controller(10, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               3, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
-                                              20 // maximum acceleration (slew)
+                                              0, // anti windup
+                                              0, // small error range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (slew)
 );
 
 // angular PID controller
@@ -159,7 +159,7 @@ ASSET(redRightFullAWP_txt);
 
 void test(){
 	chassis.setPose(0,0,0);
-	chassis.turnToHeading(90, 100000);
+	chassis.moveToPoint(0, 12, 100000);
 }
 
 void blueRightFull(){
@@ -262,20 +262,20 @@ void opcontrol() {
 		}
 		
 		if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
-			mIntake.move(127);
+			mIntake.move(-127);
 		}
 		else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
-			mIntake.move(-127);
+			mIntake.move(127);
 		}
 		else{
 			mIntake.brake();
 		}
 
 		if(controller.get_digital(E_CONTROLLER_DIGITAL_L1)){
-			mArm.move(127);
+			mArm.move(-127);
 		}
 		else if(controller.get_digital(E_CONTROLLER_DIGITAL_L2)){
-			mArm.move(-127);
+			mArm.move(127);
 		}
 		else{
 			mArm.brake();
