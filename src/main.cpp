@@ -178,8 +178,11 @@ void progSkills(){
 void intakeDist(){
 	int i = 2;
 	mIntake.move(127);
-	if(sDist.get_distance() < 5 && sDist.get_object_velocity() > 0){
-		mIntake.brake();
+	while(i > 0){
+		if(sDist.get_distance()*10 < 5 && sDist.get_object_velocity() > 0){ //5 is an estimate in cm. don't know where dist sensor will be
+			mIntake.brake();
+			i--;
+		}
 	}
 }
 
