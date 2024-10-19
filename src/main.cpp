@@ -92,16 +92,13 @@ void autonSelector(){
 
 	switch(selection){
 	case 0:
-		pros::lcd::set_text(2, "Test auton");
+		pros::lcd::set_text(2, "MOGO Side");
 		break;
 	case 1:
-		pros::lcd::set_text(2, "Blue RIGHT FullAWP");
+		pros::lcd::set_text(2, "Ring Side");
 		break;
 	case 2:
-		pros::lcd::set_text(2, "Red RIGHT FullAWP");
-		break;
-	case 3:
-		pros::lcd::set_text(2, "Skills auton");
+		pros::lcd::set_text(2, "Prog Skills");
 		break;
 	}
 }
@@ -155,20 +152,34 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-ASSET(redRightFullAWP_txt);
+ASSET(test_txt);
 
-void test(){
-	chassis.setPose(0,0,0);
-	chassis.moveToPoint(0, 12, 100000);
+void mogoSide(){
+	chassis.setPose(-53.638, -10.013, 315);
+	mArm.move(-160);
+	delay(1500);
+	mArm.brake();
+	chassis.moveToPose(-25.375, -45.163, 315, 6000);
+	mIntake.move(160);
+	delay(1500);
+	mIntake.brake();
+	chassis.moveToPose(-23, -27.588, 0, 6000);
+	leftClamp.setValue(HIGH);
+	chassis.moveToPose(-13.975, -14.288, 0, 6000);
 }
 
-void blueRightFull(){
-	
-}
-
-void redRightFull(){
-	chassis.setPose(0,0,0);
-	chassis.follow(redRightFullAWP_txt, 15, 2000);
+void ringSide(){
+	chassis.setPose(-53.638, 10.013, 225);
+	mArm.move(-160);
+	delay(1500);
+	mArm.brake();
+	chassis.moveToPose(-25.375, 45.163, 225, 6000);
+	mIntake.move(160);
+	delay(1500);
+	mIntake.brake();
+	chassis.moveToPose(-23, 27.588, 0, 6000);
+	leftClamp.setValue(HIGH);
+	chassis.moveToPose(-13.975, 14.288, 0, 6000);
 }
 
 void progSkills(){
@@ -208,15 +219,12 @@ void intakeColorBlue(){
 void autonomous() {
 	switch (selection) {
 	case 0:
-		test();
+		mogoSide();
 		break;
 	case 1:
-		blueRightFull();
+		ringSide();
 		break;
 	case 2:
-		redRightFull();
-		break;
-	case 3:
 		progSkills();
 		break;
 	}
@@ -238,6 +246,7 @@ void autonomous() {
  */
 void opcontrol() {
 	bool pressed = false; //initializes as false so pneumatics don't start open
+	bool slow = false; 
 	mIntake.set_brake_mode(MotorBrake::hold);
 
 	while (true) {
@@ -253,7 +262,8 @@ void opcontrol() {
 
 //variable pressed ensures we can use the same button on controller  
 //to toggle pistons either way: true is open, false is closed
-		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_A)){
+		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
+			pressed = !pressed;
 			if(pressed){											  
 				leftClamp.set_value(HIGH);							  
 				rightClamp.set_value(HIGH);							  
@@ -263,16 +273,32 @@ void opcontrol() {
 				rightClamp.set_value(LOW);
 			}
 		}
-		
-		if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
-			mIntake.move(-127);
+		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
+			slow = !slow;
+		}
+		if(!slow){
+			if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
+			mIntake.move(-150);
 		}
 		else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
-			mIntake.move(127);
+			mIntake.move(150);
 		}
 		else{
 			mIntake.brake();
 		}
+		}
+		else{
+			if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
+			mIntake.move(-65);
+		}
+		else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
+			mIntake.move(65);
+		}
+		else{
+			mIntake.brake();
+		}
+		}
+		
 
 		if(controller.get_digital(E_CONTROLLER_DIGITAL_L1)){
 			mArm.move(-127);
