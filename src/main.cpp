@@ -17,8 +17,7 @@ Motor mArm(13);
 Imu imu(17);
 Distance sDist(1);
 Optical sOpt(2);
-adi::Port leftClamp ('A', E_ADI_DIGITAL_OUT); //basic ADI output port declaration. The syntax is unique in LemLib
-adi::Port rightClamp ('B', E_ADI_DIGITAL_OUT); //even different than PROS + EZTemplate or PROS + OkapiLib
+adi::Port clamp ('B', E_ADI_DIGITAL_OUT); //even different than PROS + EZTemplate or PROS + OkapiLib
 
 // drivetrain settings
 Drivetrain drivetrain(&mLefts, // left motor group
@@ -83,6 +82,12 @@ Chassis chassis(drivetrain, // drivetrain settings
 );
 
 int selection = 0;
+void grab(){
+	clamp.set_value(HIGH);
+}
+void release(){
+	clamp.set_value(LOW);
+}
 void autonSelector(){
 	if(selection <= 2){
 		selection++;
@@ -116,8 +121,7 @@ void initialize() {
 	lcd::set_text(1, "Press center button to select autonomous");
 	lcd::register_btn1_cb(autonSelector);
 
-	leftClamp.set_value(LOW);
-	rightClamp.set_value(LOW);
+	clamp.set_value(LOW);
 	mArm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 }
 
@@ -152,38 +156,40 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-ASSET(test_txt);
+ASSET(skills_txt);
+ASSET(rightAwpp1_txt);
 
 void mogoSide(){
-	chassis.setPose(-53.638, -10.013, 315);
-	mArm.move(-160);
-	delay(1500);
-	mArm.brake();
-	chassis.moveToPose(-25.375, -45.163, 315, 6000);
-	mIntake.move(160);
-	delay(1500);
-	mIntake.brake();
-	chassis.moveToPose(-23, -27.588, 0, 6000);
-	leftClamp.setValue(HIGH);
-	chassis.moveToPose(-13.975, -14.288, 0, 6000);
+	chassis.setPose(-59.1, -35.188, 90);
+	chassis.moveToPoint(-29.65, -24.026, 6000, {.forwards = false}, false);
+	grab();
 }
 
 void ringSide(){
-	chassis.setPose(-53.638, 10.013, 225);
-	mArm.move(-160);
-	delay(1500);
-	mArm.brake();
-	chassis.moveToPose(-25.375, 45.163, 225, 6000);
-	mIntake.move(160);
-	delay(1500);
-	mIntake.brake();
-	chassis.moveToPose(-23, 27.588, 0, 6000);
-	leftClamp.setValue(HIGH);
-	chassis.moveToPose(-13.975, 14.288, 0, 6000);
+	chassis.setPose(-59.1, 13.262, 90);
+	chassis.moveToPoint(-30.362, 23.95, 6000, {.forwards = false}, false);
+	grab();
 }
 
 void progSkills(){
-	
+	chassis.setPose(-53, 0, 90);
+	mIntake.move(127);
+	chassis.moveToPose(-40.375, 13.262, 45, 1000);
+	chassis.moveToPose(-76, 66, 320, 2000); //score 1st goal
+	chassis.moveToPoint(17.138, 37.25, 2000);
+	chassis.moveToPoint(56.564, 18,  1300); //get behind 2nd goal
+	chassis.moveToPoint((67.5), 65, 2500);
+	chassis.moveToPoint(59, 57, 2500, {.forwards = false});
+	chassis.moveToPoint(49, 4, 4000);
+	chassis.moveToPose(88.864, -59.77, 85, 4000); //score 3rd goal
+	chassis.moveToPoint(56, -47, 2500, {.forwards = false});
+	chassis.moveToPose(-19.793, -30.913, 320, 4000);
+	chassis.moveToPose(-43, -15, 200, 4000);
+	chassis.moveToPoint(-64.088, -74.139,2000);//score 4th goal
+	chassis.moveToPoint(-64, -53, 2500, {.forwards = false});
+	chassis.moveToPoint(-22, -22, 1000);
+	mIntake.brake();
+
 }
 
 void intakeDist(){
@@ -264,13 +270,11 @@ void opcontrol() {
 //to toggle pistons either way: true is open, false is closed
 		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
 			pressed = !pressed;
-			if(pressed){											  
-				leftClamp.set_value(HIGH);							  
-				rightClamp.set_value(HIGH);							  
+			if(pressed){											  						  
+				clamp.set_value(HIGH);							  
 			}	
 			else if(!pressed){
-				leftClamp.set_value(LOW);
-				rightClamp.set_value(LOW);
+				clamp.set_value(LOW);
 			}
 		}
 		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
@@ -278,12 +282,12 @@ void opcontrol() {
 		}
 		if(!slow){
 			if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
-			mIntake.move(-150);
+			mIntake.move(-200);
 		}
-		else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
-			mIntake.move(150);
+			else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
+			mIntake.move(200);
 		}
-		else{
+			else{
 			mIntake.brake();
 		}
 		}
@@ -291,10 +295,10 @@ void opcontrol() {
 			if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
 			mIntake.move(-65);
 		}
-		else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
+			else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
 			mIntake.move(65);
 		}
-		else{
+			else{
 			mIntake.brake();
 		}
 		}
