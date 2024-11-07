@@ -1,19 +1,21 @@
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
+#include "lemlib/chassis/chassis.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/adi.h"
 #include "pros/adi.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
 #include "pros/motors.hpp"
+#include <string>
 using namespace pros;
 using namespace lemlib;
 
 Controller controller(E_CONTROLLER_MASTER);
 MotorGroup mLefts({-16, -20, -6}); // left motors forward (negitve)
 MotorGroup mRights({18, 19, 8}); // right motors reverse (positve)
-Motor mIntake(15);
-Motor mArm(13);
+Motor mIntake(15, pros::MotorGearset::blue);
+Motor mArm(13, pros::MotorGearset::green);
 Imu imu(17);
 Distance sDist(1);
 Optical sOpt(2);
@@ -82,12 +84,7 @@ Chassis chassis(drivetrain, // drivetrain settings
 );
 
 int selection = 0;
-void grab(){
-	clamp.set_value(HIGH);
-}
-void release(){
-	clamp.set_value(LOW);
-}
+
 void autonSelector(){
 	if(selection <= 2){
 		selection++;
@@ -114,6 +111,26 @@ void autonSelector(){
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+ void macro(){
+	while(mArm.get_position() > -315 || mArm.get_position() < -325){
+		if(mArm.get_position() < -325){
+			mArm.move(100);
+	}
+		else{
+			mArm.move(-100);
+		}
+	}
+}
+void setArm() {
+	if(mArm.get_position() < -325){
+			mArm.move(100);
+		}
+	else if(mArm.get_position() > -315){
+			mArm.move(-100);
+		}
+	
+ }
+
 void initialize() {
 	lcd::initialize();
 	chassis.calibrate();
@@ -123,6 +140,7 @@ void initialize() {
 
 	clamp.set_value(LOW);
 	mArm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+	Task armMacro(setArm);
 }
 
 /**
@@ -159,15 +177,57 @@ void competition_initialize() {}
 ASSET(skills_txt);
 ASSET(rightAwpp1_txt);
 
+void grab(){
+	clamp.set_value(HIGH);
+}
+void release(){
+	clamp.set_value(LOW);
+}
+
+
+//FRONT OF THE ROBOT IS THE INTAKE
 void mogoSide(){
-	chassis.setPose(-59.1, -35.188, 90);
-	chassis.moveToPoint(-29.65, -24.026, 6000, {.forwards = false}, false);
+	//code with allaince stake
+	//chassis.setPose(-52.638, -17, 180);
+	chassis.setPose(-58.5, -16.5, 180);
+	chassis.moveToPose(-63.5,  2.3, 90, 2000, {.forwards = false});
+	delay(2000);
+	mIntake.move(-120);
+	delay(1400); //score allaince stake
+	chassis.moveToPoint(-47.938, -15.951, 1000);
+	chassis.moveToPose(-28.5, -23.999, -45, 2000, {.forwards = false}); //get to mogo
+	delay(2500);
 	grab();
+	chassis.moveToPoint(-21, -60.914, 3000);
+
+	//chassis.turnToHeading(90, 4000);
+	//chassis.moveToPoint(-60,  -1, 1000, {.forwards = false});
+	// chassis.setPose(-52.638, -17.826, 180);
+	// chassis.moveToPose(-61, -0.5, -90, 2000);
+
+	/* Rayhaan Code
+	chassis.setPose(-53.638, -27.826, 270);
+	chassis.moveToPose(-27.037, -25.926, 250, 9500);
+	
+	chassis.moveToPoint(-24,  26.325, 8000, {.forwards = true});
+	// chassis.setPose(-53.638, -27.826, 270); test code
+	// chassis.moveToPose(-27.037, -25.926, 250, 9500);
+	*/
+
+	/*shivani code
+	chassis.moveToPoint(-23, -24.999, 2700, {.forwards = false}, false);
+	grab();
+	mIntake.move(-200);
+	delay(2000);
+	chassis.moveToPoint(-19.825, -45.5, 3000);
+	delay(4000);
+	chassis.moveToPoint(-23.712, -1.5, 4000);
+	mIntake.brake();*/
 }
 
 void ringSide(){
-	chassis.setPose(-59.1, 13.262, 90);
-	chassis.moveToPoint(-30.362, 23.95, 6000, {.forwards = false}, false);
+	chassis.setPose(-58.625, 36.3, 90);
+	chassis.moveToPoint(-24, 26.325, 6000, {.forwards = false}, false);
 	grab();
 }
 
@@ -175,7 +235,7 @@ void progSkills(){
 	chassis.setPose(-53, 0, 90);
 	mIntake.move(127);
 	chassis.moveToPose(-40.375, 13.262, 45, 1000);
-	chassis.moveToPose(-76, 66, 320, 2000); //score 1st goal
+	chassis.moveToPose(-76.7, 66.2, 320, 2500); //score 1st goal
 	chassis.moveToPoint(17.138, 37.25, 2000);
 	chassis.moveToPoint(56.564, 18,  1300); //get behind 2nd goal
 	chassis.moveToPoint((67.5), 65, 2500);
@@ -253,9 +313,16 @@ void autonomous() {
 void opcontrol() {
 	bool pressed = false; //initializes as false so pneumatics don't start open
 	bool slow = false; 
-	mIntake.set_brake_mode(MotorBrake::hold);
+	mIntake.set_brake_mode(MotorBrake::coast);
+	mArm.set_brake_mode(MotorBrake::hold);
+	bool run = false;
+	
+	
 
 	while (true) {
+		
+		//controller.set_text(0, 0, std::to_string(mArm.get_position()));
+		controller.set_text(0, 0, std :: to_string(mIntake.get_actual_velocity()));
 		lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
 		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
@@ -278,7 +345,8 @@ void opcontrol() {
 			}
 		}
 		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
-			slow = !slow;
+			run = !run;
+			
 		}
 		if(!slow){
 			if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
@@ -305,13 +373,30 @@ void opcontrol() {
 		
 
 		if(controller.get_digital(E_CONTROLLER_DIGITAL_L1)){
-			mArm.move(-127);
+			//mArm.move(-127);
+			mArm.move_absolute(-1600, 1000);
 		}
 		else if(controller.get_digital(E_CONTROLLER_DIGITAL_L2)){
 			mArm.move(127);
 		}
 		else{
 			mArm.brake();
+		}
+		
+		if (run){
+			if(mArm.get_position() < -325){
+		mArm.move(100);
+	}
+			else if(mArm.get_position() > -315){
+		mArm.move(-100);
+	}
+		
+		}
+		if(mArm.get_position() < -315 && mArm.get_position() > -325){
+			run = false;
+		}
+		if(mArm.get_position() < -1365 && mArm.get_position() > -325){
+			run = false;
 		}
 	}
 }
