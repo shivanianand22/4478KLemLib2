@@ -83,7 +83,7 @@ Chassis chassis(drivetrain, // drivetrain settings
 						&steerCurve
 );
 
-int selection = 0;
+int selection = 3;
 
 void autonSelector(){
 	if(selection <= 3){
@@ -198,10 +198,10 @@ void redRight(){ //mogo side
 	chassis.moveToPose(-63.5,  2.3, 90, 2000, {.forwards = false});
 	chassis.waitUntilDone();
 	delay(100);
-	mIntake.move(-120);
+	mIntake.move(-220);
 	delay(1100); //score allaince stake
 	chassis.moveToPoint(-47.938, -15.951, 1000);
-	chassis.moveToPose(-28.5, -23.999, -45, 2000, {.forwards = false}); //get to mogo
+	chassis.moveToPose(-28.5, -23.999, -55, 2000, {.forwards = false}); //get to mogo
 	chassis.waitUntilDone();
 	delay(100);
 	grab();
@@ -249,18 +249,21 @@ void blueRight(){ //ring side
 	chassis.moveToPose(-63.5,  2.3, 90, 2000, {.forwards = false});
 	chassis.waitUntilDone();
 	delay(100);
-	mIntake.move(-120);
+	mIntake.move(-220);
 	delay(1100); //score allaince stake
 	chassis.moveToPoint(-47.938, -15.951, 1000);
-	chassis.moveToPose(-28.5, -23.999, -45, 2000, {.forwards = false}); //get to mogo
+	chassis.moveToPose(-28.5, -23.999, -55, 2000, {.forwards = false}); //get to mogo
 	chassis.waitUntilDone();
-	delay(100);
+	delay(300);
 	grab();
-	chassis.moveToPoint(-21, -60.914, 2500);//pickup ring to put on Mogo
-	chassis.moveToPoint(-5.17, -44.483, 1000); //rush center rings
-	chassis.moveToPoint(-12.561, -46.757, 500, {.forwards = false}); //back up
-	chassis.moveToPoint(-5.17, -49.221, 1000); //go for second ring
-	chassis.moveToPoint(-19.468, -3.306, 2000); //touch bar
+	chassis.moveToPoint(-20, -61.914, 3000);//pickup ring to put on Mogo
+	chassis.moveToPose(-12.561, -50, 90, 2000); //prepare to rush
+	chassis.moveToPoint(-5.17, -50, 1500); //rush center rings
+	chassis.moveToPose(-17.561, -54.757,90, 500, {.forwards = false}); //back up
+	chassis.moveToPoint(-5.17, -54.221, 2000); //go for second ring
+	controller.rumble("--");
+
+	chassis.moveToPoint(-19.468, -3.306, 1000); //touch bar
 
 
 }
@@ -268,7 +271,8 @@ void blueRight(){ //ring side
 
 void progSkills(){
 	chassis.setPose(-63.541, -0.705, 90);
-	mIntake.move(120);
+	mIntake.move(-280);
+	delay(1000);
 	chassis.moveToPose(-46.674, 17.678, 180, 3000, {.forwards = false}); //go to goal
 	chassis.waitUntilDone();
 	delay(100);
@@ -340,6 +344,7 @@ void intakeColorBlue(){
 }
 
 void autonomous() {
+	controller.rumble("-");
 	switch (selection) {
 	case 0:
 		redRight();
@@ -353,7 +358,7 @@ void autonomous() {
 	case 3:
 		blueRight();
 		break;
-	case 5:
+	case 4:
 		progSkills();
 		break;
 	}
