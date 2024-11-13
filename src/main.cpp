@@ -263,13 +263,15 @@ void blueRight(){ //ring side
 	chassis.moveToPoint(-5.17, -54.221, 2000); //go for second ring
 	controller.rumble("--");
 
-	chassis.moveToPoint(-19.468, -3.306, 1000); //touch bar
+	chassis.moveToPoint(-20.468, -3.306, 1000); //touch bar
 
 
 }
 
 
 void progSkills(){
+	mLefts.tare_position();
+	mRights.tare_position();
 	chassis.setPose(-63.541, -0.705, 90);
 	mIntake.move(-280);
 	delay(1000);
@@ -345,6 +347,8 @@ void intakeColorBlue(){
 
 void autonomous() {
 	controller.rumble("-");
+	mLefts.tare_position();
+	mRights.tare_position();
 	switch (selection) {
 	case 0:
 		redRight();
