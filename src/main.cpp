@@ -193,7 +193,7 @@ void release(){
 
 //FRONT OF THE ROBOT IS THE INTAKE
 void redRight(){ //mogo side
-	//code with allaince stake
+
 	chassis.setPose(-58.5, -16.5, 180);
 	chassis.moveToPose(-63.5,  2.3, 90, 2000, {.forwards = false});
 	chassis.waitUntilDone();
@@ -212,37 +212,42 @@ void redRight(){ //mogo side
 }
 
 void blueLeft(){ //mogo side
-	chassis.setPose(-58.5, 16.5, 180);
+	chassis.setPose(-58.5, 16.5, 0);
 	chassis.moveToPose(-63.5,  -2.3, 90, 2000, {.forwards = false});
 	chassis.waitUntilDone();
 	delay(100);
-	mIntake.move(-120);
+	mIntake.move(-220);
 	delay(1100); //score allaince stake
 	chassis.moveToPoint(-47.938, 15.951, 1000);
-	chassis.moveToPose(-28.5, 23.999, -45, 2000, {.forwards = false}); //get to mogo
+	chassis.moveToPose(-28.5, 23.999, -145, 2000, {.forwards = false}); //get to mogo
 	chassis.waitUntilDone();
 	delay(100);
 	grab();
+	delay(100);
 	chassis.moveToPoint(-21, 60.914, 3000);//pickup ring to put on Mogo
-	chassis.moveToPoint(-19.468, -3.306, 3000); //touch bar
+	chassis.moveToPoint(-19.468, 3.306, 3000); //touch bar
 }
 void redLeft(){ //ring side
-	chassis.setPose(-58.5, 16.5, 180);
-	chassis.moveToPose(-63.5,  -2.3, 90, 2000, {.forwards = false});
+	chassis.setPose(-58.5, 16.5, 0);
+	chassis.moveToPose(-63.5,  -2.3, 90, 1750, {.forwards = false});
 	chassis.waitUntilDone();
 	delay(100);
-	mIntake.move(-120);
+	mIntake.move(-220);
 	delay(1100); //score allaince stake
 	chassis.moveToPoint(-47.938, 15.951, 1000);
-	chassis.moveToPose(-28.5, 23.999, -45, 2000, {.forwards = false}); //get to mogo
+	chassis.moveToPose(-28.5, 23.999, -145, 2000, {.forwards = false}); //get to mogo
 	chassis.waitUntilDone();
-	delay(100);
+	delay(300);
 	grab();
-	chassis.moveToPoint(-21, 60.914, 3000);//pickup ring to put on Mogo
-	chassis.moveToPoint(-5.17, 44.483, 1000); //rush center rings
-	chassis.moveToPoint(-12.561, 46.757, 500, {.forwards = false}); //back up
-	chassis.moveToPoint(-5.17, 49.221, 1000); //go for second ring
-	chassis.moveToPoint(-19.468, 3.306, 2000); //touch bar
+	chassis.moveToPoint(-20, 61.914, 3000);//pickup ring to put on Mogo
+	chassis.moveToPose(-12.561, 50, 90, 1500); //prepare to rush
+	chassis.moveToPoint(-5.17, 50, 1500); //rush center rings
+	chassis.moveToPose(-17.561, 54.221,90, 500, {.forwards = false}); //back up
+	chassis.moveToPoint(-5.17, 54.221, 1500); //go for second ring
+	controller.rumble("--");
+
+//	chassis.moveToPoint(-20.468, -3.306, 1000); //touch bar
+	chassis.moveToPose(-31.081, 3.98, 200, 4000);
 }
 void blueRight(){ //ring side
 	chassis.setPose(-58.5, -16.5, 180);
@@ -263,8 +268,8 @@ void blueRight(){ //ring side
 	chassis.moveToPoint(-5.17, -54.221, 2000); //go for second ring
 	controller.rumble("--");
 
-	chassis.moveToPoint(-20.468, -3.306, 1000); //touch bar
-
+	//chassis.moveToPoint(-20.468, -3.306, 1000); //touch bar
+	chassis.moveToPose(-31.081, 3.98, 20, 4000);
 
 }
 
