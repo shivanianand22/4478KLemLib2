@@ -83,7 +83,7 @@ Chassis chassis(drivetrain, // drivetrain settings
 						&steerCurve
 );
 
-int selection = 0;
+int selection = 1;
 
 void autonSelector(){
 	if(selection <= 3){
@@ -237,18 +237,19 @@ void blueLeft(){ //mogo side
 }
 
 void redLeft(){ //ring side
-	chassis.setPose(-58.625, 24, -90);
-	chassis.moveToPoint(-28.225,  24.9, 2000, {.forwards = false}, false);
-	delay(1000);
-	grab();
-	mIntake.move(-200);
-	delay(3000);
-	chassis.moveToPose(-20, 0.5, -45, 3000);
-	chassis.waitUntilDone();
-	mIntake.brake();
-	/*
-	chassis.setPose(-58.5, 16.5, 0);
-	chassis.moveToPose(-64.5,  -2.3, 90, 1900, {.forwards = false});
+	// chassis.setPose(-58.625, 24, -90);
+	// chassis.moveToPoint(-28.225,  24.9, 2000, {.forwards = false}, false);
+	// delay(1000);
+	// grab();
+	// mIntake.move(-200);
+	// delay(3000);
+	// chassis.moveToPose(-20, 0.5, -45, 3000);
+	// chassis.waitUntilDone();
+	// mIntake.brake();
+	
+	chassis.setPose(-51.9, 16.0, 90);
+	chassis.moveToPoint(-54.5,  0.2, 1500, {.forwards = false});
+	chassis.moveToPose(-63.5,  0.2, 90, 1500, {.forwards = false});
 	chassis.waitUntilDone();
 	delay(100);
 	mIntake.move(-220);
@@ -259,18 +260,19 @@ void redLeft(){ //ring side
 	delay(75);
 	grab();
 	delay(75);
-	chassis.moveToPoint(-19.5, 61.914, 3000);//pickup ring to put on Mogo
-	chassis.moveToPose(-12.561, 60.9, 90, 1000); //prepare to rush
-	chassis.moveToPoint(-5.17, 60.9, 1500); //rush center rings
+	chassis.moveToPoint(-23.0, 56.114, 2500);//pickup ring to put on Mogo
+	chassis.moveToPoint(-21.0, 54.114, 1000, {.forwards=false});
+	chassis.moveToPose(-19.561, 50.9, 90, 1000); //prepare to rush
+	chassis.moveToPoint(-14.17, 50.9, 1500); //rush center rings
 	//chassis.moveToPose(-19.561, -49.757,90, 1100, {.forwards = false}); //back up
 	chassis.waitUntilDone();
 	controller.rumble("--");
-	chassis.moveToPose(-2.17, -49.221,90,  1800); //go for second ring
+	chassis.moveToPoint(-18.17, 49,1800); //go for second ring
 	
 
 	//chassis.moveToPoint(-20.468, -3.306, 1000); //touch bar
-	chassis.moveToPose(-21.081, 1.98, 200, 3000);
-	*/
+	chassis.moveToPoint(-15, 10.98, 3000);
+	
 	
 }
 
@@ -481,23 +483,23 @@ void opcontrol() {
 			run = !run;
 			
 		}
-		if(!slow){
-			if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
-			mIntake.move(-200);
-		}
-			else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
-			mIntake.move(200);
-		}
-			else{
-			mIntake.brake();
-		}
-		}
+		// if(!slow){
+		// 	if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
+		// 	mIntake.move(-200);
+		// }
+		// 	else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
+		// 	mIntake.move(200);
+		// }
+		// 	else{
+		// 	mIntake.brake();
+		// }
+		// }
 		else{
 			if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
-			mIntake.move(-65);
+			mIntake.move(-127);
 		}
 			else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
-			mIntake.move(65);
+			mIntake.move(127);
 		}
 			else{
 			mIntake.brake();
@@ -507,6 +509,8 @@ void opcontrol() {
 
 		if(controller.get_digital(E_CONTROLLER_DIGITAL_L1)){
 			//mArm.move(-127);
+			mIntake.move_relative(90, 300);
+			delay(100);
 			mArm.move_absolute(-1600, 1000);
 		}
 		else if(controller.get_digital(E_CONTROLLER_DIGITAL_L2)){
