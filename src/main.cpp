@@ -272,16 +272,17 @@ void redLeft(){ //ring side
 	delay(500);
 	
 
-	//chassis.moveToPoint(-20.468, -3.306, 1000); //touch bar
-	chassis.moveToPoint(-35, 8.98, 3000, {.forwards = false});
+	chassis.moveToPoint(-20.468, -3.306, 1000); //touch bar
+//	chassis.moveToPoint(-35, 8.98, 3000, {.forwards = false});
 	
 	
 }
 
 void blueRight(){ //ring side
-	chassis.setPose(-51.9, -16.0, 90);
-	chassis.moveToPoint(-52.5,  0.2, 1500, {.forwards = false});
-	chassis.moveToPose(-63.5,  0.2, 90, 1500, {.forwards = false});
+	chassis.setPose(-51.9, -19.0, 90);
+	chassis.moveToPoint(-50.5,  -0.2, 3000, {.forwards = false});
+	chassis.moveToPose(-57.1,  1.0, 90, 3000, {.forwards = false});
+
 	chassis.waitUntilDone();
 	delay(100);
 	mIntake.move(-220);
