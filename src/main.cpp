@@ -15,7 +15,7 @@ Controller controller(E_CONTROLLER_MASTER);
 MotorGroup mLefts({-16, -20, -6}); // left motors forward (negitve)
 MotorGroup mRights({18, 19, 8}); // right motors reverse (positve)
 Motor mIntake(15, pros::MotorGearset::blue);
-Motor mArm(12, pros::MotorGearset::green);
+Motor mArm(13, pros::MotorGearset::green);
 Imu imu(17);
 Distance sDist(1);
 Optical sOpt(2);
@@ -83,7 +83,7 @@ Chassis chassis(drivetrain, // drivetrain settings
 						&steerCurve
 );
 
-int selection = 1;
+int selection = 3;
 
 void autonSelector(){
 	if(selection <= 3){
@@ -253,37 +253,39 @@ void redLeft(){ //ring side
 	chassis.waitUntilDone();
 	delay(100);
 	mIntake.move(-220);
-	delay(1100); //score allaince stake
+	delay(1100); //score alliance stake
 	chassis.moveToPoint(-47.938, 15.951, 1000);
 	chassis.moveToPose(-28.5, 23.999, -145, 2000, {.forwards = false}); //get to mogo
 	chassis.waitUntilDone();
 	delay(75);
 	grab();
 	delay(75);
-	chassis.moveToPoint(-23.0, 56.114, 2500);//pickup ring to put on Mogo
-	chassis.moveToPoint(-21.0, 54.114, 1000, {.forwards=false});
-	chassis.moveToPose(-19.561, 50.9, 90, 1000); //prepare to rush
-	chassis.moveToPoint(-14.17, 50.9, 1500); //rush center rings
-	//chassis.moveToPose(-19.561, -49.757,90, 1100, {.forwards = false}); //back up
+	chassis.moveToPoint(-26.0, 53.114, 2400);//pickup ring to put on Mogo
+	chassis.moveToPoint(-21.0, 52.114, 1000, {.forwards=false});//quickly backup to avoid 2nd ring
+	chassis.moveToPose(-19.561, 51.9, 90, 1000); //prepare to rush
+	chassis.moveToPoint(-14.17, 51.9, 1500); //rush center rings
+	chassis.moveToPoint(-17.561, -51.9, 1100, {.forwards = false}); //back up
 	chassis.waitUntilDone();
 	controller.rumble("--");
 	chassis.moveToPoint(-18.17, 49,1800); //go for second ring
+	chassis.waitUntilDone();
+	delay(500);
 	
 
 	//chassis.moveToPoint(-20.468, -3.306, 1000); //touch bar
-	chassis.moveToPoint(-15, 10.98, 3000);
+	chassis.moveToPoint(-35, 8.98, 3000, {.forwards = false});
 	
 	
 }
 
 void blueRight(){ //ring side
-	
-	chassis.setPose(-58.5, -16.5, 180);
-	chassis.moveToPose(-63.5,  2.3, 90, 1900, {.forwards = false});
+	chassis.setPose(-51.9, -16.0, 90);
+	chassis.moveToPoint(-52.5,  0.2, 1500, {.forwards = false});
+	chassis.moveToPose(-63.5,  0.2, 90, 1500, {.forwards = false});
 	chassis.waitUntilDone();
 	delay(100);
 	mIntake.move(-220);
-	delay(1100); //score allaince stake
+	delay(1100); //score alliance stake
 	chassis.moveToPoint(-47.938, -15.951, 1000);
 	chassis.moveToPose(-28.5, -23.999, -55, 2000, {.forwards = false}); //get to mogo
 	chassis.waitUntilDone();
