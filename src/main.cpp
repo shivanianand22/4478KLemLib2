@@ -194,13 +194,16 @@ void release(){
 
 //FRONT OF THE ROBOT IS THE INTAKE
 void redRight(){ //mogo side
-	
-	chassis.setPose(-58.5, -16.5, 180);
-	chassis.moveToPose(-63.5,  2.3, 90, 1900, {.forwards = false});
+	/*
+	//IF going for alliance stake
+	chassis.setPose(-51.7, -18.0, 90);
+	chassis.moveToPoint(-50.5,  0.2, 1500, {.forwards = false});
+	chassis.moveToPose(-57.4,  0.2, 90, 1500, {.forwards = false});
 	chassis.waitUntilDone();
 	delay(100);
 	mIntake.move(-220);
-	delay(1100); //score allaince stake
+	chassis.setPose(-63.5, 0.2, 90);
+	delay(900); //score alliance stake
 	chassis.moveToPoint(-47.938, -15.951, 1000);
 	chassis.moveToPose(-28.5, -23.999, -55, 2000, {.forwards = false}); //get to mogo
 	chassis.waitUntilDone();
@@ -208,45 +211,44 @@ void redRight(){ //mogo side
 	grab();
 	delay(75);
 	chassis.moveToPoint(-19.5, -61.914, 3000);//pickup ring to put on Mogo
-	chassis.moveToPoint(-19.468, -3.306, 3000); //touch bar
-	chassis.moveToPose(-21.081, -1.98, 20, 3000);
+	mIntake.move(-220);
+	chassis.moveToPoint(-20.468, -3.306, 1000); //touch bar
+	*/
+
+
+	//IF not going for alliance stake
+	chassis.setPose(-53, -16.0, 90);
+	chassis.moveToPoint(-47.938, -15.951, 1000);
+	chassis.moveToPose(-28.5, -23.999, -55, 2000, {.forwards = false}); //get to mogo
+	chassis.waitUntilDone();
+	delay(75);
+	grab();
+	mIntake.move(-220);
+	delay(2000);
+	chassis.moveToPoint(-21, -61.914, 3000);//pickup ring to put on Mogo
+	chassis.moveToPoint(-20, -2, 2000); //touch bar
+	
 }
 
 void blueLeft(){ //mogo side
-	/*
-	chassis.setPose(-58.5, 16.5, 0);
-	chassis.moveToPose(-63.5,  -2.3, 90, 2000, {.forwards = false});
+	chassis.setPose(-51.9, 16.0, 90);
+	chassis.moveToPoint(-54.5,  0.2, 1500, {.forwards = false});
+	chassis.moveToPose(-63.5,  0.2, 90, 1500, {.forwards = false});
 	chassis.waitUntilDone();
 	delay(100);
 	mIntake.move(-220);
-	delay(1100); //score allaince stake
+	delay(1100); //score alliance stake
 	chassis.moveToPoint(-47.938, 15.951, 1000);
 	chassis.moveToPose(-28.5, 23.999, -145, 2000, {.forwards = false}); //get to mogo
 	chassis.waitUntilDone();
-	delay(100);
+	delay(75);
 	grab();
-	delay(100);
-	chassis.moveToPoint(-21, 60.914, 3000);//pickup ring to put on Mogo
-	chassis.moveToPoint(-19.468, 3.306, 3000); //touch bar
-	*/
-	chassis.setPose(58.701, -22.363, 90);
-	chassis.moveToPoint(28.225,  -24, 2000, {.forwards = false}, false);
-	delay(1000);
-	grab();
-	mIntake.move(-200);
+	delay(75);
+	chassis.moveToPoint(-26.0, 53.114, 2400);//pickup ring to put on Mogo
+	chassis.moveToPoint(-24, -2, 3000); //touch bar
 }
 
 void redLeft(){ //ring side
-	// chassis.setPose(-58.625, 24, -90);
-	// chassis.moveToPoint(-28.225,  24.9, 2000, {.forwards = false}, false);
-	// delay(1000);
-	// grab();
-	// mIntake.move(-200);
-	// delay(3000);
-	// chassis.moveToPose(-20, 0.5, -45, 3000);
-	// chassis.waitUntilDone();
-	// mIntake.brake();
-	
 	chassis.setPose(-51.9, 16.0, 90);
 	chassis.moveToPoint(-54.5,  0.2, 1500, {.forwards = false});
 	chassis.moveToPose(-63.5,  0.2, 90, 1500, {.forwards = false});
@@ -273,9 +275,6 @@ void redLeft(){ //ring side
 	
 
 	chassis.moveToPoint(-20.468, -3.306, 1000); //touch bar
-//	chassis.moveToPoint(-35, 8.98, 3000, {.forwards = false});
-	
-	
 }
 
 void blueRight(){ //ring side
@@ -287,7 +286,7 @@ void blueRight(){ //ring side
 	delay(100);
 	mIntake.move(-220);
 	chassis.setPose(-63.5, 0.2, 90);
-	delay(1100); //score alliance stake
+	delay(900); //score alliance stake
 	chassis.moveToPoint(-47.938, -15.951, 1000);
 	chassis.moveToPose(-28.5, -23.999, -55, 2000, {.forwards = false}); //get to mogo
 	chassis.waitUntilDone();
@@ -326,7 +325,7 @@ void progSkills(){
 	chassis.waitUntilDone();
 	delay(2000);
 	chassis.moveToPoint(-62.972, 49.622, 2000); //3rd & 4th ring
-	chassis.moveToPose(-65.057, 64.489, 325, 1000, {.forwards = false});//drop 1st goal into corner
+	chassis.moveToPose(-65.257, 64.489, 325, 1000, {.forwards = false});//drop 1st goal into corner
 	chassis.waitUntilDone();
 	release(); 
 	//end of good auton to start push goal auton
@@ -335,19 +334,19 @@ void progSkills(){
 	chassis.setPose(-62.9, 60.675, imu.get_heading() + 90);
 	delay(2500);
 	chassis.moveToPoint(17.138, 45.25, 2000,{.forwards = true});	
-	chassis.moveToPoint(56.564, 18,  2500); //get behind 2nd goal
+	chassis.moveToPoint(54.564, 18,  2500); //get behind 2nd goal
 	chassis.moveToPoint((67.5), 65, 2500);
-	chassis.moveToPoint(59, 57, 2500, {.forwards = false});
-	chassis.moveToPoint(49, 4, 4000);
+	chassis.moveToPoint(61, 57, 2500, {.forwards = false});
+	chassis.moveToPoint(59, 4, 4000);
 	chassis.moveToPose(88.864, -59.77, 85, 4000); //score 3rd goal
 	chassis.moveToPoint(56, -47, 2500, {.forwards = false});
 	chassis.moveToPose(-19.793, -30.913, 320, 4000);
-	chassis.moveToPose(-43, -15, 200, 4000);
+	chassis.moveToPose(-43, -12, 200, 4000);
 	chassis.moveToPoint(-64.088, -74.139,2000);//score 4th goal
 	chassis.moveToPoint(-64, -53, 2500, {.forwards = false});
 	chassis.moveToPoint(-22, -22, 1000);
 	mIntake.brake();
-	/* code to finish good auton skills
+	/* code to finish for good auton skills
 	//go towards 2ng Mogo
 	chassis.moveToPoint(-55.674, -0.515, 2000, {.forwards = false});
 	chassis.moveToPose(-59.864, -19.983, 30, 1000, {.forwards=false});
