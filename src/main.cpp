@@ -1,4 +1,5 @@
 #include "main.h"
+#include "actions.h"
 #include "devices.h"
 #include "auton.h"
 #include "lemlib/chassis/chassis.hpp"
@@ -7,6 +8,8 @@
 #include "pros/adi.hpp"
 #include "pros/misc.h"
 #include "pros/motors.hpp"
+#include "pros/rtos.hpp"
+#include <cstddef>
 #include <string>
 using namespace pros;
 using namespace lemlib;
@@ -18,6 +21,8 @@ void initialize() {
 
 	lcd::set_text(1, "Press center button to select autonomous");
 	lcd::register_btn1_cb(autonSelector);
+	armMacro = pros::Task (macro, nullptr, "ARM_MACRO");
+	armMacro.suspend();
 
 	clamp.set_value(LOW);
 	mArm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
@@ -103,7 +108,6 @@ void autonomous() {
 
 void opcontrol() {
 	bool pressed = false; //initializes as false so pneumatics don't start open
-	bool slow = false; 
 	mIntake.set_brake_mode(MotorBrake::coast);
 	mArm.set_brake_mode(MotorBrake::hold);
 	bool run = false;
@@ -135,8 +139,9 @@ void opcontrol() {
 				clamp.set_value(LOW);
 			}
 		}
-		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
-			run = !run;
+		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){//armMacro
+			//run = !run;
+			armMacro.resume();
 			
 		}
 		else{
@@ -163,9 +168,9 @@ void opcontrol() {
 		else{
 			mArm.brake();
 		}
-		
+		/*
 		if (run){
-			if(mArm.get_position() < -322){
+			if(mArm.get_position() < -325){
 				mArm.move(100);
 			}
 			else if(mArm.get_position() > -318){
@@ -179,5 +184,6 @@ void opcontrol() {
 		if(mArm.get_position() < -1365 && mArm.get_position() > -325){
 			run = false;
 		}
+		*/
 	}
 }

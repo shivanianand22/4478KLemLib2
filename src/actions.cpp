@@ -1,5 +1,28 @@
+#include "actions.h"
 #include "devices.h"
+//#include <coroutine>
 #include <string>
+pros::Task armMacro(macro, nullptr, "ARM_MACRO");
+void macro(void* param){
+	while(1){
+	while(mArm.get_position() > -318 || mArm.get_position() < -322){
+		if(mArm.get_position() < -322){
+			mArm.move(100);
+	}
+		else{
+			mArm.move(-100);
+		}
+	delay(20);
+	}
+	mArm.brake();
+	armMacro.suspend();
+	}
+}
+
+
+
+
+
 void intakeDist(){
 	int i = 2;
 	mIntake.move(127);
