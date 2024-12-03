@@ -1,3 +1,4 @@
+#include "lemlib/api.hpp" // IWYU pragma: keep
 #include "main.h"
 #include "actions.h"
 #include "devices.h"
@@ -115,7 +116,6 @@ void opcontrol() {
 	
 
 	while (true) {
-		
 		//controller.set_text(0, 0, std::to_string(mArm.get_position()));
 		controller.set_text(0, 0, std :: to_string(mIntake.get_actual_velocity()));
 		lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
