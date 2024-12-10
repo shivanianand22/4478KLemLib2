@@ -1,7 +1,7 @@
 #include "devices.h"
 #include "liblvgl/llemu.hpp"
 #include "actions.h"
-int selection = 4;
+int selection = 3;
 /*
  0 = RedRight Mogo
  1 = RedLeft Ring
@@ -12,7 +12,7 @@ int selection = 4;
  6 = Blue Goal Rush
 */
 void autonSelector(){
-	if(selection <= 7){
+	if(selection <= 4){
 		selection++;
 	} else {
 		selection = 0;
@@ -159,25 +159,44 @@ void blueRight(){ //ring side
 
 
 void progSkills(){
+	mLefts.tare_position();
+	mRights.tare_position();
 	chassis.setPose(-64.241, -0.705, 90);
 	mIntake.move(-280);
 	delay(1000);
-	chassis.moveToPoint(-58, -0.705, 1000);
+	chassis.moveToPoint(-64.241, 5.705, 1000);
 	chassis.moveToPose(-46.897, 19.678, 160, 3000, {.forwards = false}); //go to goal
 	chassis.waitUntilDone();
 	delay(100);
 	grab();
 	chassis.moveToPoint(-22.593, 28.722, 2000);//pick up first ring
 	chassis.moveToPose(-25.912, 49.993, 270, 3000); //go to 2nd ring
-	chassis.moveToPose(-40.912, 49.653, 270, 750); //pick up 2nd ring
+	chassis.moveToPose(-33.912, 49.653, 270, 750); //pick up 2nd ring
 	chassis.waitUntilDone();
 	delay(2000);
 	chassis.moveToPoint(-62.972, 49.622, 2000); //3rd & 4th ring
 	chassis.moveToPose(-65.257, 64.489, 325, 1000, {.forwards = false});//drop 1st goal into corner
 	chassis.waitUntilDone();
-	chassis.setPose(-63.052, 60.356, imu.get_heading() + 90);
 	release(); 
-	// code to finish for good auton skills
+	//end of good auton to start push goal auton
+	mLefts.tare_position();
+	mRights.tare_position();
+	chassis.setPose(-62.9, 60.675, imu.get_heading() + 90);
+	delay(2500);
+	chassis.moveToPoint(17.138, 45.25, 2000,{.forwards = true});	
+	chassis.moveToPoint(54.564, 18,  2500); //get behind 2nd goal
+	chassis.moveToPoint((67.5), 65, 2500);
+	chassis.moveToPoint(61, 57, 2500, {.forwards = false});
+	chassis.moveToPoint(59, 4, 4000);
+	chassis.moveToPose(88.864, -59.77, 85, 4000); //score 3rd goal
+	chassis.moveToPoint(56, -47, 2500, {.forwards = false});
+	chassis.moveToPose(-19.793, -30.913, 320, 4000);
+	chassis.moveToPose(-43, -12, 200, 4000);
+	chassis.moveToPoint(-64.088, -74.139,2000);//score 4th goal
+	chassis.moveToPoint(-64, -53, 2500, {.forwards = false});
+	chassis.moveToPoint(-22, -22, 1000);
+	mIntake.brake();
+	/* code to finish for good auton skills
 	//go towards 2ng Mogo
 	chassis.moveToPoint(-55.674, -0.515, 2000, {.forwards = false});
 	chassis.moveToPose(-59.864, -19.983, 30, 1000, {.forwards=false});
@@ -191,7 +210,7 @@ void progSkills(){
 	chassis.moveToPose(-65.057, -63.814,45, 1000, {.forwards = false}); //drop off 2nd mogo in corner
 	chassis.waitUntilDone();
 	release();
-	
+	*/
 	/* old "20pt" skills
 	chassis.setPose(-53, 0, 90);
 	mIntake.move(127);
