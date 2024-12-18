@@ -8,7 +8,13 @@
 #include "pros/misc.hpp"
 #include "pros/motors.h"
 #include "pros/motors.hpp"
+#include "pros/rotation.hpp"
+#include <iostream>
 #include <string>
+#include <iomanip>
+#include <algorithm>
+#include <cstdint>
+#include <iomanip>
 using namespace pros;
 using namespace lemlib;
 Controller controller(E_CONTROLLER_MASTER);
@@ -19,8 +25,8 @@ Motor mArm(13, pros::MotorGearset::green);
 Imu imu(17);
 Distance sDist(1);
 Optical sOpt(2);
-adi::Port clamp ('B', E_ADI_DIGITAL_OUT); //even different than PROS + EZTemplate or PROS + OkapiLib
-
+adi::Port Clamper ('B', E_ADI_DIGITAL_OUT); //even different than PROS + EZTemplate or PROS + OkapiLib
+Rotation rotation_sensor(10);
 // drivetrain settings
 Drivetrain drivetrain(&mLefts, // left motor group
                               &mRights, // right motor group
@@ -82,6 +88,9 @@ Chassis chassis(drivetrain, // drivetrain settings
 						&throttleCurve, 
 						&steerCurve
 );
+
+PID armSetPid(1,0.00,0.1,0);
+PID armScorePID(2,0,0.1,0);
 
 int selection = 4;
 
@@ -145,11 +154,13 @@ void initialize() {
 	lcd::set_text(1, "Press center button to select autonomous");
 	lcd::register_btn1_cb(autonSelector);
 
-	clamp.set_value(LOW);
+	Clamper.set_value(LOW);
 	mArm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 	Task armMacro(setArm);
 	mArm.set_current_limit(2500);
+    rotation_sensor.reset_position();
     rotation_sensor.set_position(0);
+    rotation_sensor.reverse();
 }
 
 /**
@@ -188,10 +199,10 @@ ASSET(skills_txt);
 ASSET(rightAwpp1_txt);
 
 void grab(){
-	clamp.set_value(HIGH);
+	Clamper.set_value(HIGH);
 }
 void release(){
-	clamp.set_value(LOW);
+	Clamper.set_value(LOW);
 }
 
 
@@ -225,6 +236,7 @@ void blueLeft(){ //mogo side
     chassis.moveToPoint(-54.5,  0.2, 1500, {.forwards = false});
     chassis.moveToPose(-63.5,  0.2, 90, 1500, {.forwards = false});
     chassis.waitUntilDone();
+    
     delay(100);
     mIntake.move(-220);
     delay(1100); //score alliance stake
@@ -465,7 +477,11 @@ void opcontrol() {
 	mArm.set_brake_mode(MotorBrake::hold);
 	bool run = false;
 	mArm.tare_position();
-	
+    float armSpeed=0;
+    double setError=0;
+    double scoreError = 0;
+    rotation_sensor.reset_position();
+    rotation_sensor.set_position(0);
 
 	while (true) {
 		
@@ -486,16 +502,19 @@ void opcontrol() {
 		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
 			pressed = !pressed;
 			if(pressed){											  						  
-				clamp.set_value(HIGH);							  
+				Clamper.set_value(HIGH);							  
 			}	
 			else if(!pressed){
-				clamp.set_value(LOW);
+				Clamper.set_value(LOW);
 			}
 		}
 		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
 			run = !run;
-			
+            armSetPid.reset();
+			 
 		}
+       
+
 		// if(!slow){
 		// 	if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
 		// 	mIntake.move(-200);
@@ -522,32 +541,45 @@ void opcontrol() {
 
 		if(controller.get_digital(E_CONTROLLER_DIGITAL_L1)){
 			//mArm.move(-127);
-			mIntake.move_relative(90, 400);
-			delay(50);
-			mArm.move_absolute(-1770, 1000);
+            armSpeed = armScorePID.update(rotation_sensor.get_position()/100.0 - -810);
+			mIntake.move(60);
+            delay(50);
+            std :: clamp(int(scoreError), -600 , 600);
+            if(rotation_sensor.get_position() > -790 * 100){ //this line
+			mArm.move_velocity(-armSpeed);
+            }
+            
 		}
 		else if(controller.get_digital(E_CONTROLLER_DIGITAL_L2)){
-			mArm.move(100);
+			mArm.move(60);
 		}
 		else{
 			mArm.brake();
 		}
-		
-		if (run){
-			if(mArm.get_position() < -322){
-				mArm.move(100);
+		//testing
+        
+		if (run){ 
+            /*possible PID for arm*/
+            setError = rotation_sensor.get_position()/100.0 - -110; //change for macro
+            armSpeed = armSetPid.update(setError);
+			std :: clamp(int(armSpeed), -600, 600);
+            if(fabs(setError) > 1){
+				//mArm.move(80);
+                mArm.move_velocity(-armSpeed);
+                std :: cout << "Running";
+				//mArm.move(-80);
+                
 			}
-			else if(mArm.get_position() > -318){
-				mArm.move(-100);
-			}
+            
+            
 		}
 		
-		if(mArm.get_position() < -315 && mArm.get_position() > -325){
+		if(rotation_sensor.get_position() < -100*100 && rotation_sensor.get_position() > -110*100){
 			run = false;
 		}
-		if(mArm.get_position() < -1365 && mArm.get_position() > -325){
-			run = false;
-		}
-        controller.set_text(0, 0, std::to_string(mArm.get_position()));
+		
+        //controller.set_text(0, 0, "Positon: %f", (rotation_sensor.get_position()));
+        lcd::print(1, "value: %f", armSpeed);
+        //controller.set_text(0,0,"%d",rotation_sensor.get_position() );
 	}
 }
