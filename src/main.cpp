@@ -19,7 +19,7 @@ using namespace pros;
 using namespace lemlib;
 Controller controller(E_CONTROLLER_MASTER);
 MotorGroup mLefts({-16, -20, -6}); // left motors forward (negitve)
-MotorGroup mRights({18, 19, 8}); // right motors reverse (positve)
+MotorGroup mRights({18, 5, 8}); // right motors reverse (positve)
 Motor mIntake(15, pros::MotorGearset::blue);
 Motor mArm(13, pros::MotorGearset::green);
 Imu imu(17);
@@ -543,7 +543,7 @@ void opcontrol() {
 			//mArm.move(-127);
             armSpeed = armScorePID.update(rotation_sensor.get_position()/100.0 - -810);
 			mIntake.move(60);
-            delay(50);
+            delay(10);
             std :: clamp(int(scoreError), -600 , 600);
             if(rotation_sensor.get_position() > -790 * 100){ //this line
 			mArm.move_velocity(-armSpeed);
@@ -560,7 +560,7 @@ void opcontrol() {
         
 		if (run){ 
             /*possible PID for arm*/
-            setError = rotation_sensor.get_position()/100.0 - -110; //change for macro
+            setError = rotation_sensor.get_position()/100.0 - -122; //change for macro
             armSpeed = armSetPid.update(setError);
 			std :: clamp(int(armSpeed), -600, 600);
             if(fabs(setError) > 1){
@@ -574,7 +574,7 @@ void opcontrol() {
             
 		}
 		
-		if(rotation_sensor.get_position() < -100*100 && rotation_sensor.get_position() > -110*100){
+		if(fabs(setError) < 1){
 			run = false;
 		}
 		
