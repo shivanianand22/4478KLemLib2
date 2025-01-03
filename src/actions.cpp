@@ -25,7 +25,13 @@ void intakeColorRed(){
 	}
 	
 }
+void intakeInArm(){
+	mIntake.move(-127);
+	delay(2000);
+	while(mIntake.get_actual_velocity() > 400){}
+	mIntake.brake();
 
+}
 void intakeColorBlue(){
 	if(sOpt.get_hue() == 240){
 		intakeDist();

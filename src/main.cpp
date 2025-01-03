@@ -87,6 +87,7 @@ void autonomous() {
 	mLefts.tare_position();
 	mRights.tare_position();
     release();
+    
 	switch (selection) {
 	case 0:
 		redRight();
@@ -121,7 +122,7 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	
+	//progSkills();
 	bool slow = false; 
 	mIntake.set_brake_mode(MotorBrake::coast);
 	mArm.set_brake_mode(MotorBrake::hold);
