@@ -31,10 +31,11 @@ void initialize() {
     Rotation rotation_sensor(10);
 	lcd::set_text(1, "Press center button to select autonomous");
 	lcd::register_btn1_cb(autonSelector);
-
+	mArm.set_gearing(pros::E_MOTOR_GEARSET_36);
 	Clamper.set_value(LOW);
-	mArm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-	mArm.set_current_limit(2500);
+	mArm.set_brake_mode(MotorBrake::hold);
+	Task armTask(moveArm, (void*)"PROS", TASK_PRIORITY_DEFAULT,
+                TASK_STACK_DEPTH_DEFAULT,"controls arm tasks" );
     rotation_sensor.reset_position();
     rotation_sensor.set_position(0);
     rotation_sensor.reverse();
@@ -122,55 +123,44 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	//progSkills();
-	bool slow = false; 
+	 
 	mIntake.set_brake_mode(MotorBrake::coast);
-	mArm.set_brake_mode(MotorBrake::hold);
-	bool run = false;
-	mArm.tare_position();
-    float armSpeed=0;
-    double setError=0;
-    double scoreError = 0;
-    rotation_sensor.reset_position();
-    rotation_sensor.set_position(0);
+	rotation_sensor.reset_position();
+	rotation_sensor.set_position(0);
 
 	while (true) {
 		controller.set_text(0, 0, std :: to_string(mIntake.get_actual_velocity()));
 		lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
+									(pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
+									(pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
 
-		// Tank control scheme
-		// Passes joystick values into tank drive
-		delay(20);                         // Run for 20 ms then update
-        drive();
+	// Tank control scheme
+	// Passes joystick values into tank drive
+	delay(20);     // Run for 20 ms then update
+	drive();
 
-		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){toggleClamp();}
-		if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
-			run = !run;
-            armSetPid.reset();
-			 
-		}
-       
+	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){toggleClamp();}
+	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){primeArm = true;}
+	if(controller.get_digital(E_CONTROLLER_DIGITAL_L1)){neutralArm = true;}
+	if(controller.get_digital(E_CONTROLLER_DIGITAL_L2)){lowerArm = true;}
+	if(controller.get_digital(E_CONTROLLER_DIGITAL_UP)){allainceArm = true;}
 
-		// if(!slow){
-		// 	if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){
-		// 	mIntake.move(-200);
-		// }
-		// 	else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){
-		// 	mIntake.move(200);
-		// }
-		// 	else{
-		// 	mIntake.brake();
-		// }
-		// }
-		else{
-			if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){    mIntake.move(-127);} //move intake forward
-			else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){   mIntake.move(127);}//move intake backward
-			else{   mIntake.brake();}    //stop intake
-		}
+	if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){    
+		mIntake.move(127);//move intake forward
+	} 
+	else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){   
+		mIntake.move(-127);//move intake backward
+	}
+	else{   
+		mIntake.brake();//stop intake
+	}    
+
+	
+	
+
+	
 		
-
+/*	
 		if(controller.get_digital(E_CONTROLLER_DIGITAL_L1)){
 			//mArm.move(-127);
             armSpeed = armScorePID.update(rotation_sensor.get_position()/100.0 - -810);
@@ -178,7 +168,7 @@ void opcontrol() {
             delay(10);
             std :: clamp(int(scoreError), -600 , 600);
             if(rotation_sensor.get_position() > -790 * 100){ //this line
-			mArm.move_velocity(-armSpeed);
+			    mArm.move_velocity(-armSpeed);
             }
             
 		}
@@ -190,8 +180,8 @@ void opcontrol() {
 		}
 		
 		if (run){ 
-            /*possible PID for arm*/
-            setError = rotation_sensor.get_position()/100.0 - -122; //change for macro
+            //possible PID for arm
+            setError = rotation_sensor.get_position()/100.0 - -119; //change for macro
             armSpeed = armSetPid.update(setError);
 			std :: clamp(int(armSpeed), -600, 600);
             if(fabs(setError) > 1){
@@ -209,8 +199,9 @@ void opcontrol() {
 			run = false;
 		}
 		
-        //controller.set_text(0, 0, "Positon: %f", (rotation_sensor.get_position()));
+        controller.set_text(0, 0, "Positon: %f", (rotation_sensor.get_position()));
         lcd::print(1, "value: %f", armSpeed);
-        //controller.set_text(0,0,"%d",rotation_sensor.get_position() );
+        controller.set_text(0,0,"%d",rotation_sensor.get_position() );
+		*/
 	}
 }
