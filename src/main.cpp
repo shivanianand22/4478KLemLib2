@@ -30,14 +30,9 @@ void initialize() {
 	chassis.calibrate();
     imu.reset();
     Rotation rotation_sensor(10);
-<<<<<<< HEAD
-
-
-=======
 	lcd::set_text(1, "Press center button to select autonomous");
 	lcd::register_btn1_cb(autonSelector);
 	mArm.set_gearing(pros::E_MOTOR_GEARSET_36);
->>>>>>> main
 	Clamper.set_value(LOW);
 	mArm.set_brake_mode(MotorBrake::hold);
 	Task armTask(moveArm, (void*)"PROS", TASK_PRIORITY_DEFAULT,
@@ -205,7 +200,7 @@ void opcontrol() {
 		}
 		
 		if(fabs(setError) < 1){ 
-			run = false;
+			run = false;j
 		}
 		
         controller.set_text(0, 0, "Positon: %f", (rotation_sensor.get_position()));
