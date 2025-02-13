@@ -11,6 +11,7 @@
 #include "pros/motors.h"
 #include "pros/motors.hpp"
 #include "drive.h"
+
 #include <string>
 using namespace pros;
 using namespace lemlib;
@@ -25,12 +26,11 @@ using namespace lemlib;
  */
 
 void initialize() {
-	lcd::initialize();
+	
 	chassis.calibrate();
-    imu.reset();
-    Rotation rotation_sensor(10);
-	lcd::set_text(1, "Press center button to select autonomous");
-	lcd::register_btn1_cb(autonSelector);
+  imu.reset();
+  Rotation rotation_sensor(10);
+	
 	mArm.set_gearing(pros::E_MOTOR_GEARSET_36);
 	Clamper.set_value(LOW);
 	mArm.set_brake_mode(MotorBrake::hold);
@@ -47,7 +47,7 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	pros::lcd::register_btn1_cb(autonSelector);
+	
     
 }
 
@@ -199,7 +199,7 @@ void opcontrol() {
 		}
 		
 		if(fabs(setError) < 1){ 
-			run = false;
+			run = false;j
 		}
 		
         controller.set_text(0, 0, "Positon: %f", (rotation_sensor.get_position()));
