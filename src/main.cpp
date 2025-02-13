@@ -11,7 +11,7 @@
 #include "pros/motors.h"
 #include "pros/motors.hpp"
 #include "drive.h"
-#include "pros/apix.h" 
+
 #include <string>
 using namespace pros;
 using namespace lemlib;
@@ -28,10 +28,9 @@ using namespace lemlib;
 void initialize() {
 	
 	chassis.calibrate();
-    imu.reset();
-    Rotation rotation_sensor(10);
-	lcd::set_text(1, "Press center button to select autonomous");
-	lcd::register_btn1_cb(autonSelector);
+  imu.reset();
+  Rotation rotation_sensor(10);
+	
 	mArm.set_gearing(pros::E_MOTOR_GEARSET_36);
 	Clamper.set_value(LOW);
 	mArm.set_brake_mode(MotorBrake::hold);

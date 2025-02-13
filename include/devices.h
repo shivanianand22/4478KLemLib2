@@ -23,6 +23,9 @@ extern Optical sOpt;
 extern adi::Port Clamper; //even different than PROS + EZTemplate or PROS + OkapiLib
 extern Drivetrain drivetrain;
 extern OdomSensors sensors;
+extern Distance leftDist;
+extern Distance rightDist;
+extern Distance backDist;
 // lateral PID controller
 extern ControllerSettings lateral_controller;
 // angular PID controller
