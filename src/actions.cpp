@@ -1,9 +1,29 @@
 #include "devices.h"
+#include "pros/rtos.h"
+bool primeArm = false;
 void grab(){
 	Clamper.set_value(HIGH);
 }
 void release(){
 	Clamper.set_value(LOW);
+}
+void actions(void* param){
+	double setError = 0;
+	double armSpeed = 0;
+	while(true){
+		if(primeArm){
+			arm.move(armSpeed);
+			delay(50);
+			setError = 35 - rotation_sensor.get_position()/100.0 ; //change for macro
+            armSpeed = armSetPid.update(setError);
+			std :: clamp(int(armSpeed), -600, 600);
+			delay(20);
+			if(fabs(setError) < 1){ //when target reach turn off pid
+				primeArm = false;
+			}
+		}
+		delay(20);
+	}
 }
 void intakeDist(){
 	int i = 2;

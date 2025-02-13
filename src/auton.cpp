@@ -1,6 +1,6 @@
 #include "devices.h"
 #include "lemlib/chassis/chassis.hpp"
-#include "main.h"
+#include "main.h" 
 #include "liblvgl/llemu.hpp"
 #include "actions.h"
 #include "pros/rtos.h"
@@ -48,53 +48,30 @@ void autonSelector(){
 	}
 }
 void redRight(){ //mogo side
-    chassis.setPose(-51.7, -18.0, 90);
-    chassis.moveToPoint(-50.5,  0.2, 1500, {.forwards = false});
+    chassis.setPose(-51.9, -16.0, 90);
+    chassis.moveToPoint(-54.5,  -0.2, 1900, {.forwards = false});
 	chassis.waitUntilDone();
-	chassis.setPose(-50.5,  0.2, chassis.getPose().theta);
-    chassis.moveToPose(-57.4,  0.2, 90, 1500, {.forwards = false});
-
-
+	chassis.setPose(-54.5,  -0.2, chassis.getPose().theta);
+    chassis.moveToPose(-60.8,  -0.2, 90, 1650, {.forwards = false});
     chassis.waitUntilDone();
     delay(100);
     mIntake.move(-220);
-    chassis.setPose(-63.5, 0.2, 90);
+    chassis.setPose(-63.5, -0.2, 90);
     delay(900); //score alliance stake
     chassis.moveToPoint(-47.938, -15.951, 1000);
-    chassis.moveToPose(-28.5, -23.999, -55, 2000, {.forwards = false}); //get to mogo
+    chassis.moveToPose(-27.5, -24.999, -55, 2800, {.forwards = false}); //get to mogo
     chassis.waitUntilDone();
     delay(75);
     grab();
     delay(75);
 	chassis.setPose(-28.5,  -23.999, chassis.getPose().theta);
-    chassis.moveToPoint(-19.5, -61.914, 3000);//pickup ring to put on Mogo
+    chassis.moveToPoint(-19.5, -61.914, 2800);
     chassis.moveToPose(-18, -1.98, 20, 3000); //touch bar
 }
 
 void blueLeft(){ //mogo side
     chassis.setPose(-51.9, 16.0, 90);
-    chassis.moveToPoint(-54.5,  0.2, 1500, {.forwards = false});
-    chassis.moveToPose(-63.5,  0.2, 90, 1500, {.forwards = false});
-    chassis.waitUntilDone();
-    
-    delay(100);
-    mIntake.move(-220);
-    delay(1100); //score alliance stake
-    chassis.moveToPoint(-47.938, 15.951, 1000);
-    chassis.moveToPose(-28.5, 23.999, -145, 2000, {.forwards = false}); //get to mogo
-    chassis.waitUntilDone();
-    delay(75);
-    grab();
-    delay(75);
-	chassis.setPose(-28.5,  23.999, chassis.getPose().theta);
-    chassis.moveToPoint(-26.0, 53.114, 2400);//pickup ring to put on Mogo
-    chassis.moveToPoint(-24, -2, 3000); //touch bar
-}
-
-
-void redLeft(){ //ring side
-    chassis.setPose(-51.9, 16.0, 90);
-    chassis.moveToPoint(-54.5,  0.2, 1500, {.forwards = false});
+    chassis.moveToPoint(-54.5,  0.2, 1200, {.forwards = false});
     chassis.moveToPose(-63.5,  0.2, 90, 1500, {.forwards = false});
     chassis.waitUntilDone();
     delay(100);
@@ -108,11 +85,33 @@ void redLeft(){ //ring side
     grab();
     delay(75);
     chassis.setPose(-28.5,  23.999, chassis.getPose().theta);
-    chassis.moveToPoint(-26.0, 57, 2000);//pickup ring to put on Mogo
+    chassis.moveToPoint(-26.0, 57, 1900);//pickup ring to put on Mogo
+    chassis.moveToPoint(-21.0, 52.114, 1000, {.forwards=false});//quickly backup to avoid 2nd ring
+    chassis.moveToPose(-17, 7, 180,3000); //touch bar
+}
+
+
+void redLeft(){ //ring side
+    chassis.setPose(-51.9, 16.0, 90);
+    chassis.moveToPoint(-54.5,  0.2, 1200, {.forwards = false});
+    chassis.moveToPose(-63.5,  0.2, 90, 1500, {.forwards = false});
+    chassis.waitUntilDone();
+    delay(100);
+    mIntake.move(-220);
+    delay(1100); //score alliance stake
+    chassis.setPose(-63.5,  0.2, chassis.getPose().theta);
+    chassis.moveToPoint(-47.938, 15.951, 1000);
+    chassis.moveToPose(-28.5, 23.999, -145, 2000, {.forwards = false}); //get to mogo
+    chassis.waitUntilDone();
+    delay(75);
+    grab();
+    delay(75);
+    chassis.setPose(-28.5,  23.999, chassis.getPose().theta);
+    chassis.moveToPoint(-26.0, 57, 1900);//pickup ring to put on Mogo
     chassis.moveToPoint(-21.0, 52.114, 1000, {.forwards=false});//quickly backup to avoid 2nd ring
     chassis.moveToPose(-19.561, 51.9, 90, 1000); //prepare to rush
     chassis.moveToPoint(-14.17, 57, 1500); //rush center rings
-    delay(500);
+    delay(750);
    /*
     chassis.moveToPoint(-17.561, -51.9, 1000, {.forwards = false}); //back up
     chassis.waitUntilDone();
@@ -123,25 +122,23 @@ void redLeft(){ //ring side
     delay(500);
     */
 
-    chassis.moveToPoint(-20.468, -6, 1100); //touch bar
+    chassis.moveToPoint(-20.468, -6, 3000); //touch bar
 }
 
 
 void blueRight(){ //ring side
-    chassis.setPose(-51.7, -18.0, 90);
-    chassis.moveToPoint(-50.5,  0.2, 1500, {.forwards = false});
+    chassis.setPose(-51.9, -16.0, 90);
+    chassis.moveToPoint(-54.5,  -0.2, 1900, {.forwards = false});
 	chassis.waitUntilDone();
-	chassis.setPose(-50.5,  0.2, chassis.getPose().theta);
-    chassis.moveToPose(-57.4,  0.2, 90, 1500, {.forwards = false});
-
-
+	chassis.setPose(-54.5,  -0.2, chassis.getPose().theta);
+    chassis.moveToPose(-59.5,  -0.2, 90, 1500, {.forwards = false});
     chassis.waitUntilDone();
     delay(100);
     mIntake.move(-220);
-    chassis.setPose(-63.5, 0.2, 90);
+    chassis.setPose(-63.5, -0.2, 90);
     delay(900); //score alliance stake
     chassis.moveToPoint(-47.938, -15.951, 1000);
-    chassis.moveToPose(-28.5, -23.999, -55, 2000, {.forwards = false}); //get to mogo
+    chassis.moveToPose(-28.5, -23.999, -55, 2200, {.forwards = false}); //get to mogo
     chassis.waitUntilDone();
     delay(75);
     grab();
@@ -155,16 +152,12 @@ void blueRight(){ //ring side
 }
 
 void progSkills(){
-    grab();
     controller.set_text(1, 1, "running skills");
     mLefts.tare_position();
     mRights.tare_position();
     chassis.setPose(-64.241, -0.705, 90);
-    chassis.moveToPoint(-68.241, -0.705, 5000,{.forwards = false} );
-    mIntake.move(-280);
-    chassis.waitUntilDone();
-    delay(500);
-    mIntake.move(127);
+    mIntake.move(-280); //score on alliance stake
+    delay(1000);
     chassis.moveToPoint(-60.241, 1.705, 1000);
     chassis.waitUntilDone();
     release();
@@ -184,32 +177,8 @@ void progSkills(){
     release();
     chassis.setPose(-49, 55.000, chassis.getPose().theta);
     delay(100);
-    delay(3500);//REMOVE THIS. THIS IS SO I CAN MOVE MOGO TO RIGHT POSITION
     lcd::print(2, "θ: %f, x: %f, y: %f", chassis.getPose().theta, chassis.getPose().x, chassis.getPose().y);
-     //start of auton that just pushes goal
-     /*
-    mLefts.tare_position();
-    mRights.tare_position();
-    chassis.setPose(-62.9, 60.675, chassis.getPose().theta);
-    delay(50);
-    chassis.moveToPoint(17.138, 45.25, 2000,{.forwards = true});    
-    chassis.moveToPoint(50.564, 18,  2500); //get behind 2nd goal
-    chassis.moveToPoint((67.5), 65, 2500);
-    chassis.moveToPoint(61, 57, 2500, {.forwards = false});
-    chassis.moveToPoint(59, 4, 4000);
-    chassis.moveToPose(90.864, -59.77, 85, 3900); //score 3rd goal
-    chassis.moveToPoint(56, -47, 2500, {.forwards = false});
-    chassis.moveToPose(-19.793, -30.913, 320, 4000);
-    chassis.moveToPose(-39, -12, 200, 4000);
-    chassis.moveToPoint(-64.088, -74.139,2000);//score 4th goal
-    chassis.moveToPoint(-64, -53, 2500, {.forwards = false});
-    chassis.moveToPoint(-22, -22, 1000);
-    mIntake.brake();*/
-
-    //start to go to second goal
-    
-    
-    //code to finish for good auton skills
+     
     //go towards 2ng Mogo
    // chassis.moveToPoint(-55.674, -0.515, 2000, {.forwards = false});
     chassis.moveToPoint(-32, 41 , 500);
@@ -231,8 +200,22 @@ void progSkills(){
     printf("time %i",c::millis()/1000);
     chassis.setPose(-62.5, -62.5, 40);
     delay(200);
-    chassis.moveToPoint(8.113, -57.276, 4000);
-    chassis.moveToPose(0, -64.164, 180, 3000);
+    chassis.moveToPoint(6.113, -57.276, 2000);//pick up ring
+    chassis.waitUntilDone();
+    mIntake.brake();
+    chassis.moveToPose(44, -0.5, 180, 5000, {.forwards=false});
+    chassis.waitUntilDone();
+    chassis.setPose(47, -0.5, 180);
+    grab();
+    mIntake.move(-127);
+    delay(2000); //score ring
+    release();
+    //start pushing in goals
+    chassis.moveToPoint(56.773, 15, 1000);
+    chassis.moveToPoint(63.363, 66.554, 2000);
+    chassis.moveToPoint(66.271,-16.632, 5000 );
+    chassis.moveToPose(67.165, -64.562, -45, 5000);//push in last goal
+    release();
     /* old "20pt" skills
     chassis.setPose(-53, 0, 90);
     mIntake.move(127);
