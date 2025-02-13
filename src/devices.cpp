@@ -5,9 +5,8 @@ Controller controller(E_CONTROLLER_MASTER);
 MotorGroup mLefts({-16, -20, 17}); // left motors forward (negitve)
 MotorGroup mRights({-1, 2, 3}); // right motors reverse (positve)
 Motor mIntake(-7, pros::MotorGearset::blue);
-Motor arm1(-1, pros::MotorGearset::red);
-Motor arm2(2, pros::MotorGearset::red);
-MotorGroup arm({arm1, arm2});
+MotorGroup mArm({-1, 2});
+
 Imu imu(17);
 Distance sDist(1);
 Optical sOpt(2);
