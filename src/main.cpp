@@ -169,6 +169,7 @@ void opcontrol() {
             std :: clamp(int(scoreError), -600 , 600);
             if(rotation_sensor.get_position() > -790 * 100){ //this line
 			    mArm.move_velocity(-armSpeed);
+			    mArm.move_velocity(-armSpeed);
             }
             
 		}
@@ -180,6 +181,8 @@ void opcontrol() {
 		}
 		
 		if (run){ 
+            //possible PID for arm
+            setError = rotation_sensor.get_position()/100.0 - -119; //change for macro
             //possible PID for arm
             setError = rotation_sensor.get_position()/100.0 - -119; //change for macro
             armSpeed = armSetPid.update(setError);
@@ -201,7 +204,7 @@ void opcontrol() {
 		
         controller.set_text(0, 0, "Positon: %f", (rotation_sensor.get_position()));
         lcd::print(1, "value: %f", armSpeed);
-        controller.set_text(0,0,"%d",rotation_sensor.get_position() );
-		*/
+        //controller.set_text(0,0,"%d",rotation_sensor.get_position() );*/
 	}
 }
+

@@ -10,6 +10,7 @@ using namespace pros;
 using namespace lemlib;
 // ADI Ports
 constexpr char CLAMP_PORT = 'A';
+
 extern MotorGroup mLefts; // left motors forward (negitve)
 extern Controller controller;
 extern MotorGroup mRights; // right motors reverse (positve)
