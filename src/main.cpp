@@ -34,11 +34,11 @@ void initialize() {
 	mArm.set_gearing(pros::E_MOTOR_GEARSET_36);
 	Clamper.set_value(LOW);
 	mArm.set_brake_mode(MotorBrake::hold);
-	Task armTask(moveArm, (void*)"PROS", TASK_PRIORITY_DEFAULT,
-                TASK_STACK_DEPTH_DEFAULT,"controls arm tasks" );
+	Task armTask(moveArm, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls arm tasks" );
     rotation_sensor.reset_position();
     rotation_sensor.set_position(0);
-    rotation_sensor.reverse();
+    //rotation_sensor.reverse();
+
 }
 
 /**
@@ -123,10 +123,10 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	 
 	mIntake.set_brake_mode(MotorBrake::coast);
 	rotation_sensor.reset_position();
 	rotation_sensor.set_position(0);
+	rotation_sensor.reverse();
 
 	while (true) {
 		controller.set_text(0, 0, std :: to_string(mIntake.get_actual_velocity()));
@@ -155,6 +155,7 @@ void opcontrol() {
 		mIntake.brake();//stop intake
 	}    
 
+	lcd::print(1, "currPos: %i", rotation_sensor.get_position());
 	
 	
 

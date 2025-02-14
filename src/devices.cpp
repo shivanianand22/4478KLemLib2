@@ -2,9 +2,9 @@
 using namespace pros;
 using namespace lemlib;
 Controller controller(E_CONTROLLER_MASTER);
-MotorGroup mLefts({-16, -20, 17}); // left motors forward (negitve)
-MotorGroup mRights({-1, 2, 3}); // right motors reverse (positve)
-Motor mIntake(-7, pros::MotorGearset::blue);
+MotorGroup mLefts({-9, -7, -20});
+MotorGroup mRights({6, 5, 10});
+Motor mIntake(-4, pros::MotorGearset::blue);
 MotorGroup mArm({-1, 2});
 
 Imu imu(17);

@@ -1,9 +1,12 @@
 #include "devices.h"
 #include "pros/llemu.hpp"
 bool primeArm = false;
-bool neutralArm = false;
+bool neutralArm = false; 
 bool allainceArm = false;
 bool lowerArm = false;
+double target = 0;
+int targetArr[4] = {50, 165, 210, 5};
+
 void grab(){
 	Clamper.set_value(HIGH);
 }
@@ -13,13 +16,11 @@ void release(){
 void moveArm(void* param){
 	double setError = 0;
 	double armSpeed = 0;
-	double target = 0;
+	
+	
 	while(true){
 		
-		if(primeArm){target = 35;}// sets target value depending on which button clicked
-		if(allainceArm){}
-		if(neutralArm){}
-		if(lowerArm){target = 5;}
+		
 		setError = target - rotation_sensor.get_position()/100.0; 
 		if(fabs(setError) > .5){
 			lcd::print(1, "currPos: %i, target: %f", rotation_sensor.get_position(), target);
