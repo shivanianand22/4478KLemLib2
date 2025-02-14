@@ -7,7 +7,8 @@
 #include <cstdio>
 #include <ctime>
 
-int selection = 4;
+int selection = 0;
+bool cornerMogo = false;
 /*
  0 = RedRight Mogo
  1 = RedLeft Ring
@@ -17,35 +18,63 @@ int selection = 4;
  5 = Red Goal Rush
  6 = Blue Goal Rush
 */
+void placeMogoToggle(){
+	cornerMogo = !cornerMogo;
+    if(cornerMogo){
+        pros::lcd::set_text(3, "Baby going into the corner");
+    }
+    else{
+        pros::lcd::set_text(3, "Robot touching bar");
+    }
+}
+
 void autonSelector(){
-	if(selection <= 4){
-		selection++;
-	} else {
-		selection = 0;
-	}
-	switch(selection){
-	case 0:
-		pros::lcd::set_text(2, "RedRight(MOGO Side)");
-		break;
-	case 1:
-		pros::lcd::set_text(2, "RedLeft(Ring Side)");
-		break;
-	case 2:
-		pros::lcd::set_text(2, "BlueLeft(MOGO side)");
-		break;
-	case 3:
-		pros::lcd::set_text(2, "BlueRight(Ring Side)");
-		break;
-	case 4:
-		pros::lcd::set_text(2, "Prog Skills");
-		break;
-	case 5:
-		pros::lcd::set_text(2, "Red Goal Rush");
-		break;
-	case 6:
-		pros::lcd::set_text(2, "Blue Goal Rush");
-		break;
-	}
+    if(selection <= 7){
+        selection++;
+    } else {
+        selection = 0;
+    }
+    switch(selection){
+    case 0:
+        pros::lcd::set_text(2, "RedRight(MOGO Side)");
+        break;
+    case 1:
+        pros::lcd::set_text(2, "RedLeft(Ring Side)");
+        break;
+    case 2:
+        pros::lcd::set_text(2, "BlueLeft(MOGO side)");
+        break;
+    case 3:
+        pros::lcd::set_text(2, "BlueRight(Ring Side)");
+        break;
+    case 4:
+        pros::lcd::set_text(2, "Prog Skills");
+        break;
+    case 5:
+        pros::lcd::set_text(2, "Red Goal Rush");
+        break;
+    case 6:
+        pros::lcd::set_text(2, "Blue Goal Rush");
+        break;
+    case 7:
+        pros::lcd::set_text(2, "Red 4 ring");
+        break;
+    case 8:
+        pros::lcd::set_text(2, "Blue 4 ring");
+        break;
+    }
+}
+void reverseAutonSelector(){
+    if(selection == 0){
+        selection = 7;
+    }
+    else if(selection ==1){
+        selection =8;
+    }
+    else{
+        selection -=2;
+    }
+    autonSelector();
 }
 void redRight(){ //mogo side
     chassis.setPose(-51.9, -16.0, 90);
@@ -237,3 +266,5 @@ void progSkills(){
 }
 void redRush(){}
 void blueRush(){}
+void blue4Ring(){}
+void red4Ring(){}

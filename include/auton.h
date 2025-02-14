@@ -9,4 +9,6 @@ extern int selection;
  void autonSelector();
  void blueRush();
  void redRush();
+ void blue4Ring();
+ void red4Ring();
 #endif
