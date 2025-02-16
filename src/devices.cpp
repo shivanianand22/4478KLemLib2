@@ -1,4 +1,5 @@
 #include "devices.h"
+#include "pros/distance.hpp"
 using namespace pros;
 using namespace lemlib;
 Controller controller(E_CONTROLLER_MASTER);
@@ -12,6 +13,9 @@ Distance sDist(19);
 Optical sOpt(14);
 adi::Port Clamper ('A', E_ADI_DIGITAL_OUT); //even different than PROS + EZTemplate or PROS + OkapiLib
 Rotation rotation_sensor(3);
+Distance leftDist(4);
+Distance rightDist(5);
+Distance backDist(6);
 // drivetrain settings
 Drivetrain drivetrain(&mLefts, // left motor group
                               &mRights, // right motor group

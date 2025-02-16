@@ -141,11 +141,11 @@ void progSkills(){
     chassis.moveToPose(-58.257, 64.489, 325, 1000, {.forwards = false});//drop 1st goal into corner
     chassis.waitUntilDone();
     controller.clear();
-    lcd::print(1, "θ:%f, x: %f, y: %f", chassis.getPose().theta, chassis.getPose().x, chassis.getPose().y);
+    
     release();
     chassis.setPose(-49, 55.000, chassis.getPose().theta);
     delay(100);
-    lcd::print(2, "θ: %f, x: %f, y: %f", chassis.getPose().theta, chassis.getPose().x, chassis.getPose().y);
+    
      
     //go towards 2ng Mogo
    // chassis.moveToPoint(-55.674, -0.515, 2000, {.forwards = false});
