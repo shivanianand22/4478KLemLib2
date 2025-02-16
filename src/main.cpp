@@ -90,7 +90,7 @@ void autonomous() {
 	controller.rumble("-");
 	mLefts.tare_position();
 	mRights.tare_position();
-	
+	startTime = pros::millis();
 	switch (selection) {
 	case 0:
 		redRight();

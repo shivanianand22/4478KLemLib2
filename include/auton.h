@@ -1,6 +1,8 @@
 #ifndef AUTON_H
 #define AUTON_H
 extern int selection;
+extern bool cornerMogo;
+extern double startTime;
  void redRight();
  void redLeft();
  void blueRight();
