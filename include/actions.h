@@ -5,6 +5,7 @@
  extern bool blueAllaince;
  extern bool loadLB;
  extern bool primed;
+ extern bool loaded;
  void intakeDist();
  void intakeColor(void* param);
  void grab();

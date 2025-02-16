@@ -2,14 +2,14 @@
 using namespace pros;
 using namespace lemlib;
 Controller controller(E_CONTROLLER_MASTER);
-MotorGroup mLefts({-16, -20, 17}); // left motors forward (negitve)
-MotorGroup mRights({-1, 2, 3}); // right motors reverse (positve)
-Motor mIntake(-7, pros::MotorGearset::blue);
+MotorGroup mLefts({-7, -9, -20}); // left motors forward (negitve)
+MotorGroup mRights({5, 6, 10}); // right motors reverse (positve)
+Motor mIntake(-4, pros::MotorGearset::blue);
 MotorGroup mArm({-1, 2});
 
-Imu imu(17);
-Distance sDist(1);
-Optical sOpt(2);
+Imu imu(16);
+Distance sDist(19);
+Optical sOpt(14);
 adi::Port Clamper ('A', E_ADI_DIGITAL_OUT); //even different than PROS + EZTemplate or PROS + OkapiLib
 Rotation rotation_sensor(3);
 // drivetrain settings
@@ -30,14 +30,14 @@ OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
 
 
 // lateral PID controller
-ControllerSettings lateral_controller(10, // proportional gain (kP)
+ControllerSettings lateral_controller(8, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               3, // derivative gain (kD)
-                                              0, // anti windup
-                                              0, // small error range, in inches
-                                              0, // small error range timeout, in milliseconds
-                                              0, // large error range, in inches
-                                              0, // large error range timeout, in milliseconds
+                                              3, // anti windup
+                                              1, // small error range, in inches
+                                              500, // small error range timeout, in milliseconds
+                                              2, // large error range, in inches
+                                              500, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
@@ -74,5 +74,5 @@ Chassis chassis(drivetrain, // drivetrain settings
 						&steerCurve
 );
 
-PID armSetPid(1,0.00,0.1,0);
+PID armSetPid(3,0.00 ,0.0,0);
 PID armScorePID(2,0,0.1,0);

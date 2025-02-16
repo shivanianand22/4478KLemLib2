@@ -1,9 +1,10 @@
-#include "main.h"
+#include "../include/main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "devices.h"
 #include "auton.h"
 #include "actions.h"
 #include "lemlib/chassis/chassis.hpp"
+#include "liblvgl/llemu.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/adi.h"
 #include "pros/adi.hpp"
@@ -11,7 +12,9 @@
 #include "pros/motors.h"
 #include "pros/motors.hpp"
 #include "drive.h"
+#include "pros/rotation.hpp"
 #include <string>
+#include <sys/signal.h>
 using namespace pros;
 using namespace lemlib;
 
@@ -24,23 +27,23 @@ using namespace lemlib;
  * to keep execution time for this mode under a few seconds.
  */
 
-Task colorTask(intakeColor, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls color sort" );
+//Task colorTask(intakeColor, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls color sort" );
 
 void initialize() {
+	
 	lcd::initialize();
 	chassis.calibrate();
 	imu.reset();
-	Rotation rotation_sensor(10);
 	lcd::set_text(1, "Press center button to select autonomous");
 	lcd::register_btn1_cb(autonSelector);
 	mArm.set_gearing(pros::E_MOTOR_GEARSET_36);
 	Clamper.set_value(LOW);
 	mArm.set_brake_mode(MotorBrake::hold);
 	Task armTask(moveArm, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls arm tasks" );
-	
-	rotation_sensor.reset_position();
 	rotation_sensor.set_position(0);
-	rotation_sensor.reverse();
+	selection--;
+	autonSelector();
+	
 		
 }
 
@@ -83,10 +86,11 @@ ASSET(rightAwpp1_txt);
 
 
 void autonomous() {
+	
 	controller.rumble("-");
 	mLefts.tare_position();
 	mRights.tare_position();
-  release();
+	
 	switch (selection) {
 	case 0:
 		redRight();
@@ -116,6 +120,7 @@ void autonomous() {
 		blue4Ring();
 		break;
 	}
+		
 }
 
 /**
@@ -132,11 +137,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	colorTask.remove();
-
+	//colorTask.remove();
 	mIntake.set_brake_mode(MotorBrake::coast);
-	rotation_sensor.reset_position();
-	rotation_sensor.set_position(0);
 
 	while (true) {
 		controller.set_text(0, 0, std :: to_string(mIntake.get_actual_velocity()));
@@ -191,9 +193,9 @@ void opcontrol() {
 	
 
 	
-		
+		    
 
-        //controller.set_text(0,0,"%d",rotation_sensor.get_position() );*/
+        lcd::print(2, "sensor: %d",rotation_sensor.get_position()/100.0);
 	}
 }
 

@@ -7,8 +7,8 @@
 #include <cstdio>
 #include <ctime>
 
-int selection = 0;
-bool cornerMogo = false;
+int selection = 6;
+bool cornerMogo= false;
 /*
  0 = RedRight Mogo
  1 = RedLeft Ring
@@ -120,38 +120,23 @@ void blueLeft(){ //mogo side
 }
 
 
-void redLeft(){ //ring side
-    chassis.setPose(-51.9, 16.0, 90);
-    chassis.moveToPoint(-54.5,  0.2, 1200, {.forwards = false});
-    chassis.moveToPose(-63.5,  0.2, 90, 1500, {.forwards = false});
+void redLeft(){ //ring side done
+    chassis.setPose(-52.167, 23.792, 270);
+    mIntake.move(127); 
+    // while(1){
+    //     delay(20);
+    //     lcd::print(3, "x: %.4f, y: %.4f, theta: %.4f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
+    // }
+    chassis.moveToPoint(-31.16,  23.792, 1000, {.forwards = false});//mogo
     chassis.waitUntilDone();
-    delay(100);
-    mIntake.move(-220);
-    delay(1100); //score alliance stake
-    chassis.setPose(-63.5,  0.2, chassis.getPose().theta);
-    chassis.moveToPoint(-47.938, 15.951, 1000);
-    chassis.moveToPose(-28.5, 23.999, -145, 2000, {.forwards = false}); //get to mogo
-    chassis.waitUntilDone();
-    delay(75);
     grab();
-    delay(75);
-    chassis.setPose(-28.5,  23.999, chassis.getPose().theta);
-    chassis.moveToPoint(-26.0, 57, 1900);//pickup ring to put on Mogo
-    chassis.moveToPoint(-21.0, 52.114, 1000, {.forwards=false});//quickly backup to avoid 2nd ring
-    chassis.moveToPose(-19.561, 51.9, 90, 1000); //prepare to rush
-    chassis.moveToPoint(-14.17, 57, 1500); //rush center rings
-    delay(750);
-   /*
-    chassis.moveToPoint(-17.561, -51.9, 1000, {.forwards = false}); //back up
+    chassis.turnToHeading(65, 500);
+    chassis.moveToPose(-7.66,55,360, 4000, {.lead=.6});//rings
+    chassis.swingToHeading(190, DriveSide::LEFT, 1000);
+    chassis.moveToPoint(-28.8, 40, 500);
+    chassis.moveToPoint(-36, 14, 3000); //touch bar
     chassis.waitUntilDone();
-    controller.rumble("--");
-    
-    chassis.moveToPoint(-18.17, 49,1700); //go for second ring
-    chassis.waitUntilDone();
-    delay(500);
-    */
-
-    chassis.moveToPoint(-20.468, -6, 3000); //touch bar
+    target = armTargets[2];
 }
 
 
@@ -265,6 +250,59 @@ void progSkills(){
     mIntake.brake();*/
 }
 void redRush(){}
-void blueRush(){}
+void blueRush(){
+    target = rotation_sensor.get_position()/100.0;
+    chassis.setPose(-55.5, 64.1, 90);
+    chassis.moveToPose(-16.6, 58.5, 115, 1800, {.forwards= true, .lead = 0.35,.minSpeed = 100,.earlyExitRange = 8});//get to mogo 
+    delay(500);
+    target= armTargets[3];
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-32, 63, 800, {.forwards= false, .minSpeed = 127});//bring mogo back to our side
+    delay(200);
+    target=armTargets[0];
+    mIntake.move(127);
+    chassis.waitUntilDone();
+    mIntake.move(127);
+    chassis.turnToPoint(-19, 50, 1000);
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-19, 50, 2000); //pick up ring
+    delay(1800);
+    mIntake.brake();
+    chassis.turnToHeading(16, 1000);
+    chassis.moveToPose(-21, 34.5, 0, 2000, {.forwards = false});//get to mogo
+    chassis.waitUntilDone();
+    grab();
+    mIntake.move(127);
+    
+        chassis.turnToHeading(90, 500);
+        chassis.moveToPose(-18, 1.98, 160, 3000, {.forwards = true}); //touch bar
+        target = armTargets[2];
+    
+
+}
 void blue4Ring(){}
-void red4Ring(){}
+void red4Ring(){//done
+    chassis.setPose(-60.317, 8.863, 225);
+    target = armTargets[3];//scores allaince stake
+    delay(600);
+    chassis.moveToPose(-34.38, 17.37, 270, 3000, {.forwards = false});
+    chassis.waitUntilDone();
+    grab();
+    lcd::print(1, "x: %.4f, y: %.4f, thetdda: %.4f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
+    loadLB = true;
+    chassis.turnToHeading(290, 600);
+    chassis.moveToPoint(-22, 47, 2000);//ring
+    chassis.moveToPose(-11.18, 56.11, 47, 2500);//wall stake
+    chassis.waitUntilDone();
+    while(loadLB){delay(20);}
+    target = armTargets[2];
+    delay(1000);
+    target = armTargets[0];
+    mIntake.move(127);
+    chassis.turnToHeading(130, 500);
+    chassis.moveToPose(-6.5, 40, 540, 1500, {.lead= .2});
+    chassis.moveToPoint(-10.83, 7.79, 1000);
+    chassis.waitUntilDone();
+    target= armTargets[2];
+    
+}
