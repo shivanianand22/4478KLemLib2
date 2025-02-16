@@ -3,7 +3,7 @@
 
 
 bool pressed= false;//variable pressed ensures we can use the same button on controller  
-//to toggle pistons either way: true is open, false is closed
+										//to toggle pistons either way: true is open, false is closed
 void toggleClamp(){
   			pressed = !pressed;
 			if(pressed){											  						  
