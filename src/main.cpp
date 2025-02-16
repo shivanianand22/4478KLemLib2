@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../include/main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "devices.h"
 #include "auton.h"
@@ -367,6 +367,8 @@ void create_buttons() {
  * to keep execution time for this mode under a few seconds.
  */
 
+//Task colorTask(intakeColor, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls color sort" );
+
 void initialize() {
 	lv_init(); //initalize  lvgl
 	chassis.calibrate();
@@ -377,11 +379,12 @@ void initialize() {
 	mArm.set_gearing(pros::E_MOTOR_GEARSET_36);
 	Clamper.set_value(LOW);
 	mArm.set_brake_mode(MotorBrake::hold);
-	Task armTask(moveArm, (void*)"PROS", TASK_PRIORITY_DEFAULT,
-                TASK_STACK_DEPTH_DEFAULT,"controls arm tasks" );
-    rotation_sensor.reset_position();
-    rotation_sensor.set_position(0);
-    rotation_sensor.reverse();
+	Task armTask(moveArm, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls arm tasks" );
+	rotation_sensor.set_position(0);
+	selection--;
+	autonSelector();
+	
+		
 }
 
 /**
@@ -422,11 +425,8 @@ ASSET(rightAwpp1_txt);
 
 
 
-//FRONT OF THE ROBOT IS THE INTAKE
-
-
-
 void autonomous() {
+	
 	controller.rumble("-");
 	mLefts.tare_position();
 	mRights.tare_position();
@@ -450,10 +450,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	 
+	//colorTask.remove();
 	mIntake.set_brake_mode(MotorBrake::coast);
-	rotation_sensor.reset_position();
-	rotation_sensor.set_position(0);
 
 	while (true) {
 		controller.set_text(0, 0, std :: to_string(mIntake.get_actual_velocity()));
@@ -472,6 +470,25 @@ void opcontrol() {
 	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)){target = armTargets[2];}
 	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){target = armTargets[3];}
 
+	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)){target = armTargets[0];}
+	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){target = armTargets[1];}
+	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)){target = armTargets[2];}
+	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){target = armTargets[3];}
+
+
+	if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){  
+
+		if(primed){ //if the arm is primed
+			if(sDist.get_distance() > 50 && sDist.get_distance() < 70){
+				mIntake.move(0); //stop the arm when ring is in lady brown
+			}
+			else{
+				mIntake.move(127); //move the arm until ring is in lady brown
+			}
+		}
+		else{
+			mIntake.move(127);
+		}
 
 	if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){  
 
@@ -498,8 +515,23 @@ void opcontrol() {
 		if(!blueAllaince){
 			controller.set_text(1,1,"BLUE TEAM");
 			blueAllaince = true;
+	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)){
+		if(!blueAllaince){
+			controller.set_text(1,1,"BLUE TEAM");
+			blueAllaince = true;
 		}
 		else{
+			controller.set_text(1,1,"RED TEAM");
+			blueAllaince = false;
+		}
+	}
+	
+	
+
+	
+		    
+
+        lcd::print(2, "sensor: %d",rotation_sensor.get_position()/100.0);
 			controller.set_text(1,1,"RED TEAM");
 			blueAllaince = false;
 		}
