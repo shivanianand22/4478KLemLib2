@@ -10,6 +10,10 @@ bool primed = false;
 bool loaded = false;
 // 0 is lower, 1 is prime, 2 is neutral, 3 is allaince
 
+// 0 is lower, 1 is prime, 2 is neutral, 3 is allaince
+
+// 0 is lower, 1 is prime, 2 is neutral, 3 is allaince
+
 void grab(){
 	Clamper.set_value(HIGH); //actiavtes piston to clamp
 }
