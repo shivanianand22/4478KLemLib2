@@ -197,7 +197,9 @@ void createButtons() {
     // Alliance Stake Button
     lv_obj_t * allianceStakeButton = lv_btn_create(pathingScreen); //create button
     lv_obj_set_size(allianceStakeButton, 30, 30); //set button size
-    lv_obj_set_style_bg_opa(allianceStakeButton, LV_OPA_TRANSP, LV_PART_MAIN); // Bright green
+	  lv_obj_set_style_bg_color(allianceStakeButton, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(allianceStakeButton, 60, LV_PART_MAIN); 
+
   
     lv_obj_add_event_cb(allianceStakeButton, allianceStakeButtonHandler, LV_EVENT_CLICKED, NULL);
     //^^^registers the call back function to the button 
@@ -205,34 +207,39 @@ void createButtons() {
     // Mogo Button
     lv_obj_t * mogoButton = lv_btn_create(pathingScreen);
     lv_obj_set_size(mogoButton, 30, 30);
-    lv_obj_set_style_bg_opa(mogoButton, LV_OPA_TRANSP, LV_PART_MAIN); // Bright green
+	lv_obj_set_style_bg_color(mogoButton, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(mogoButton, 60, LV_PART_MAIN); // Bright green
     lv_obj_add_event_cb(mogoButton, mogoButtonHandler, LV_EVENT_CLICKED, NULL);
 
     // Rings or mogo Button
     lv_obj_t * middleButton = lv_btn_create(pathingScreen);
     lv_obj_set_size(middleButton, 30, 30);
-    lv_obj_set_style_bg_opa(middleButton, LV_OPA_TRANSP, LV_PART_MAIN); // Bright green
+	lv_obj_set_style_bg_color(middleButton, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(middleButton, 60, LV_PART_MAIN); 
 
     // Ring Button
     lv_obj_t * ringButton = lv_btn_create(pathingScreen);
     lv_obj_set_size(ringButton, 30, 30);
-    lv_obj_set_style_bg_opa(ringButton, LV_OPA_TRANSP, LV_PART_MAIN); // Bright green
+	lv_obj_set_style_bg_color(ringButton, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(ringButton, 60, LV_PART_MAIN); 
     lv_obj_add_event_cb(ringButton, ringButtonHandler, LV_EVENT_CLICKED, NULL);
 
     // Corner Button
     lv_obj_t * cornerButton = lv_btn_create(pathingScreen);
     lv_obj_set_size(cornerButton, 30, 30);
-    lv_obj_set_style_bg_opa(cornerButton, LV_OPA_TRANSP, LV_PART_MAIN); // Bright green
+	lv_obj_set_style_bg_color(cornerButton, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(cornerButton, 60, LV_PART_MAIN); 
     lv_obj_add_event_cb(cornerButton, cornerButtonHandler, LV_EVENT_CLICKED, NULL);
 
     // Bar Button
     lv_obj_t * barButton = lv_btn_create(pathingScreen);
     lv_obj_set_size(barButton, 30, 30);
-    lv_obj_set_style_bg_opa(barButton, LV_OPA_TRANSP, LV_PART_MAIN); // Bright green
+	lv_obj_set_style_bg_color(barButton, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(barButton, 60, LV_PART_MAIN);
     
     lv_obj_add_event_cb(barButton, barButtonHandler, LV_EVENT_CLICKED, NULL);
 
-    alignButton(allianceStakeButton, mogoButton, middleButton, ringButton, cornerButton, barButton);
+    alignButton(allianceStakeButton, mogoButton,  ringButton, middleButton, cornerButton, barButton);
     // Start Position Button, to change starting orientation of the robot
     lv_obj_t * startPositionButton = lv_btn_create(pathingScreen);
     lv_obj_set_size(startPositionButton, 100, 50);
