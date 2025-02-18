@@ -19,8 +19,8 @@ void moveArm(void* param){
 	double setError = 0;
 	double armSpeed = 0;
 	while(true){
-	//	lcd::print(1, "currPos: %i, target: %f", rotation_sensor.get_position(), target);
-		//lcd::print(2, "error: %.4f, speed: %f",setError, armSpeed);
+		lcd::print(5	, "currPos: %i, target: %f", rotation_sensor.get_position(), target);
+		lcd::print(4, "error: %.4f, speed: %f",setError, armSpeed);
 		setError = target - rotation_sensor.get_position()/100.0; 
 		if(fabs(setError) > .5){
 			

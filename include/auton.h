@@ -3,6 +3,9 @@
 extern int selection;
 extern bool cornerMogo;
 extern double startTime;
+void placeMogoToggle();
+void autonSelector();
+void reverseAutonSelector();
  void redRight();
  void redLeft();
  void blueRight();

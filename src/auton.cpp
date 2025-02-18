@@ -111,10 +111,10 @@ void blueRight(){ //ring side
     chassis.waitUntilDone();
     grab();
     chassis.turnToHeading(115, 500);
-    chassis.moveToPose(-7.66,-55,180, 4000, {.lead=.6});//rings
+    chassis.moveToPose(.5,-55,180, 4000, {.lead=.6});//rings
     chassis.swingToHeading(350, DriveSide::RIGHT, 1000);
-    chassis.moveToPoint(-28.8, -40, 500);
-    chassis.moveToPoint(-36, -14, 3000); //touch bar
+    chassis.moveToPoint(-20.8, -40, 500);
+    chassis.moveToPoint(-27, -14, 3000); //touch bar
     chassis.waitUntilDone();
     target = armTargets[2];
 }
@@ -187,9 +187,10 @@ void progSkills(){
     
 }
 void redRush(){
+    controller.rumble(".");
     target = rotation_sensor.get_position()/100.0;
     chassis.setPose(-55.5, -64.1, 90);
-    chassis.moveToPose(-16.6, -58.5, 65, 1800, {.forwards= true, .lead = 0.35,.minSpeed = 100,.earlyExitRange = 8});//get to mogo 
+    chassis.moveToPose(-17., -57.5, 50, 1000, {.forwards= true, .lead = 0.35,.minSpeed = 100,.earlyExitRange = 8});//get to mogo 
     delay(500);
     target= armTargets[3];
     chassis.waitUntilDone();
@@ -198,6 +199,7 @@ void redRush(){
     target=armTargets[0];
     mIntake.move(127);
     chassis.waitUntilDone();
+    chassis.setPose(chassis.getPose().x+6, chassis.getPose().y, chassis.getPose().theta);
     mIntake.move(127);
     chassis.turnToPoint(-19, -50, 1000);
     chassis.waitUntilDone();
@@ -205,18 +207,17 @@ void redRush(){
     delay(1800);
     mIntake.brake();
     chassis.turnToHeading(164, 1000);
-    chassis.moveToPose(-21, 34.5, 0, 2000, {.forwards = false});//get to mogo
+    chassis.moveToPose(-21, -29.5, 180, 2000, {.forwards = false});//get to mogo
     chassis.waitUntilDone();
     grab();
     mIntake.move(127);
-    chassis.turnToHeading(90, 500);
     chassis.moveToPose(-18, 1.98, 160, 3000, {.forwards = true}); //touch bar
     target = armTargets[2];
 }
 void blueRush(){
     target = rotation_sensor.get_position()/100.0;
     chassis.setPose(-55.5, 64.1, 90);
-    chassis.moveToPose(-16.6, 58.5, 115, 1800, {.forwards= true, .lead = 0.35,.minSpeed = 100,.earlyExitRange = 8});//get to mogo 
+    chassis.moveToPose(-17.6, 58.5, 115, 900, {.forwards= true, .lead = 0.35,.minSpeed = 100,.earlyExitRange = 8});//get to mogo 
     delay(500);
     target= armTargets[3];
     chassis.waitUntilDone();
@@ -225,6 +226,7 @@ void blueRush(){
     target=armTargets[0];
     mIntake.move(127);
     chassis.waitUntilDone();
+    chassis.setPose(chassis.getPose().x+6, chassis.getPose().y, chassis.getPose().theta);
     mIntake.move(127);
     chassis.turnToPoint(-19, 50, 1000);
     chassis.waitUntilDone();
@@ -247,16 +249,17 @@ void blue4Ring(){
     chassis.setPose(-60.317, -8.863, 315);
     target = armTargets[3];//scores allaince stake
     delay(600);
-    chassis.moveToPose(-34.38, -17.37, 270, 3000, {.forwards = false}); //mogo
+    chassis.moveToPose(-34.38, -18.37, 270, 3000, {.forwards = false}); //mogo
     chassis.waitUntilDone();
     grab();
     lcd::print(1, "x: %.4f, y: %.4f, thetdda: %.4f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     loadLB = true;
     chassis.turnToHeading(250, 600);
     chassis.moveToPoint(-22, -47, 2000);//ring
-    chassis.moveToPose(-11.18, -56.11, 133, 2500);//wall stake
+    chassis.moveToPose(-11.18, -59.11, 133, 2500);//wall stake
     chassis.waitUntilDone();
     while(loadLB && (millis() - startTime)/1000 < 10){delay(20);}
+    if(loadLB){loadLB = false;} //if it got timed out end the loading process
     target = armTargets[2];
     delay(1000);
     target = armTargets[0];
@@ -281,6 +284,7 @@ void red4Ring(){//done
     chassis.moveToPose(-11.18, 56.11, 47, 2500);//wall stake
     chassis.waitUntilDone();
     while(loadLB && (millis() - startTime)/1000 < 10){delay(20);}
+    if(loadLB){loadLB = false;} //if it got timed out end the loading process
     target = armTargets[2];
     delay(1000);
     target = armTargets[0];

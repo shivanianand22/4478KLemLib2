@@ -20,6 +20,8 @@ using namespace lemlib;
 
 
 
+
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -36,6 +38,8 @@ void initialize() {
 	imu.reset();
 	lcd::set_text(1, "Press center button to select autonomous");
 	lcd::register_btn1_cb(autonSelector);
+  lcd::register_btn0_cb(reverseAutonSelector);
+  lcd::register_btn2_cb(placeMogoToggle);
 	mArm.set_gearing(pros::E_MOTOR_GEARSET_36);
 	Clamper.set_value(LOW);
 	mArm.set_brake_mode(MotorBrake::hold);
@@ -54,6 +58,8 @@ void initialize() {
  */
 void disabled() {
 	pros::lcd::register_btn1_cb(autonSelector);
+  pros::lcd::register_btn0_cb(reverseAutonSelector);
+  pros::lcd::register_btn2_cb(placeMogoToggle);
     
 }
 
