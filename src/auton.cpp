@@ -3,6 +3,7 @@
 #include "main.h" 
 #include "liblvgl/llemu.hpp"
 #include "actions.h"
+#include "pros/abstract_motor.hpp"
 #include "pros/rtos.h"
 #include <cstdio>
 #include <ctime>
@@ -120,70 +121,98 @@ void blueRight(){ //ring side
 }
 
 void progSkills(){
-    controller.set_text(1, 1, "running skills");
-    mLefts.tare_position();
-    mRights.tare_position();
-    chassis.setPose(-64.241, -0.705, 90);
-    mIntake.move(-280); //score on alliance stake
-    delay(1000);
-    chassis.moveToPoint(-60.241, 1.705, 1000);
-    chassis.waitUntilDone();
-    release();
-    chassis.moveToPose(-46.897, 19.678, 160, 3000, {.forwards = false}); //go to goal
-    chassis.waitUntilDone();
-    delay(100);
-    grab();
-    mIntake.move(-127);
-    chassis.moveToPoint(-22.593, 28.722, 1500);//pick up first ring
-    chassis.moveToPose(-20.912, 49.303, 270, 3000); //go to 2nd ring
-    chassis.moveToPose(-39.912, 49.953, 270, 2000); //pick up 2nd ring
-    chassis.moveToPoint(-58.972, 49.622, 2000); //3rd & 4th ring
-    chassis.moveToPose(-58.257, 64.489, 325, 1000, {.forwards = false});//drop 1st goal into corner
-    chassis.waitUntilDone();
-    controller.clear();
-    lcd::print(1, "θ:%f, x: %f, y: %f", chassis.getPose().theta, chassis.getPose().x, chassis.getPose().y);
-    release();
-    chassis.setPose(-49, 55.000, chassis.getPose().theta);
-    delay(100);
-    lcd::print(2, "θ: %f, x: %f, y: %f", chassis.getPose().theta, chassis.getPose().x, chassis.getPose().y);
-     
-    //go towards 2ng Mogo
-   // chassis.moveToPoint(-55.674, -0.515, 2000, {.forwards = false});
-    chassis.moveToPoint(-32, 41 , 500);
-    chassis.moveToPose(-47.5, -16.713, 0, 3500, {.forwards=false});
-    chassis.waitUntilDone();
-    chassis.setPose(-47.5,-28.713,0);
+    chassis.setPose(-60.317, 8.863, 225);
+    target = armTargets[3];//scores allaince stake
     delay(500);
-    grab(); //grab 2nd mogo
-    delay(100);
-    chassis.moveToPoint(-16.593, -23.595, 2000); //1st ring
-    chassis.moveToPoint(-16.593, -47, 1000);
-    chassis.moveToPose(-39.936, -48.9,270,   2000);//2nd ring
-    chassis.moveToPose(-60, -48.9,270,  4000); //3rd & 4th ring
+    chassis.moveToPoint(-54.67, 12.81, 250, {.forwards= false,.minSpeed = 50});//grab mogo
     chassis.waitUntilDone();
-    chassis.setPose(-62.8, -46.8, 270);
-    chassis.moveToPose(-61.957, -63.014,40, 4000, {.forwards = false}); //drop off 2nd mogo in corner
+    grab();
+    chassis.moveToPoint(-34.38, 17.37,  1000, {.minSpeed =80});//grab ring
+    chassis.moveToPose(-3, 30, 45, 1000, {.minSpeed = 100, .earlyExitRange = 6}); //avoid the middleBar
     chassis.waitUntilDone();
-    release(); 
-    printf("time %i",c::millis()/1000);
-    chassis.setPose(-62.5, -62.5, 40);
-    delay(200);
-    chassis.moveToPoint(6.113, -57.276, 2000);//pick up ring
+    loadLB= true; //next ring going into lb
+    chassis.moveToPoint(16.5, 41.1, 1000);//pick up ring
+    chassis.moveToPoint(-2, 33, 1000, {.forwards= false});
+    chassis.turnToHeading(0, 500);
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-2, 59, 1500);
+    target = armTargets[2];
+    delay(50);
+    mIntake.move(127);
+    chassis.waitUntilDone();
+    chassis.setPose(0,62.7,0); //reset pose after alligning with wall stake
+    //checkpoint can be used for testing
+    chassis.moveToPoint(0, 47.5, 1000, {.forwards= false});
+    target = armTargets[0];
+    chassis.moveToPoint(-55., 47.3, 2500);//pick up the three rings
+    chassis.turnToPoint(-45.8, 60, 400); 
+    chassis.moveToPoint(-45.8, 60, 1000); //pick up last ring
+    chassis.turnToHeading(100, 500);
+    chassis.moveToPoint(-52, 61.7, 600, {.forwards = false});
+    chassis.waitUntilDone();
+    release(); //drop goal in the corner
+
+    chassis.moveToPoint(-41.1, 58.7, 300);
+    chassis.moveToPoint(-45.8, 13.3, 4000,{.forwards=false});//pick up second mogo
+    chassis.moveToPoint(-27, -24, 1000);//pick up ring
+    chassis.waitUntilDone();
+    chassis.moveToPose(20.7, -47.4,90, 2500); //pick up lb ring
+    delay(1000);
+    loadLB=true;
+    chassis.moveToPoint(0, -45.32, 1000);  
+    chassis.turnToHeading(270, 500);//line up with the stake
+    chassis.moveToPoint(0, -66, 1000);
+    target = armTargets[2];//wall stake
+    delay(50);
+    mIntake.move(127);
+    chassis.waitUntilDone();
+    chassis.setPose(0,-62.7,0); //reset pose after alligning with wall stake
+    //checkpoint can be used for testing
+    chassis.moveToPoint(0, 47.5, 1000, {.forwards= false});
+    target = armTargets[0];
+    chassis.moveToPoint(-55., 47.3, 2500);//pick up the three rings
+    chassis.turnToPoint(-45.8, 60, 400); 
+    chassis.moveToPoint(-45.8, 60, 1000); //pick up last ring
+    chassis.turnToHeading(80, 500);
+    chassis.moveToPoint(-52, 61.7, 600, {.forwards = false});
+    chassis.waitUntilDone();
+    release(); //drop goal in the corner
+
+    mIntake.set_brake_mode(MotorBrake::coast);
+    chassis.moveToPose(-23, -23,45, 1000,{.minSpeed= 100, .earlyExitRange=4});
     chassis.waitUntilDone();
     mIntake.brake();
-    chassis.moveToPose(44, -0.5, 180, 5000, {.forwards=false});
+    chassis.moveToPoint(23.7, 23.7, 3000);
+    chassis.waitUntil(50);
+    loadLB= true;// hopefully this picks up both rings and puts one in the lb
+    chassis.turnToHeading(315, 500);
+    chassis.moveToPoint(40.87, 8.1, 1500, {.forwards = false});
     chassis.waitUntilDone();
-    chassis.setPose(47, -0.5, 180);
     grab();
-    mIntake.move(-127);
-    delay(2000); //score ring
-    release();
-    //start pushing in goals
-    chassis.moveToPoint(56.773, 15, 1000);
-    chassis.moveToPoint(63.363, 66.554, 2000);
-    chassis.moveToPoint(66.271,-16.632, 5000 );
-    chassis.moveToPose(67.165, -64.562, -45, 5000);//push in last goal
-    release();
+    chassis.moveToPoint(62, 0, 1000);
+    chassis.turnToPoint(69, 0, 500);
+    chassis.waitUntilDone();
+    target= armTargets[3]; //score allaince stake
+    delay(500);
+    mIntake.move(127);
+    chassis.moveToPoint(54, 0, 500, {.forwards= false});
+    chassis.turnToPoint(25, -22.5, 500);
+    chassis.moveToPoint(25, -22.5, 1000); //pick up ring
+    chassis.moveToPose(49.3, -47.7, 90, 2000);//pick up ring
+    chassis.turnToPoint(47.7, -58, 500);
+    chassis.moveToPoint(47.7, -58, 1000);
+    chassis.turnToHeading(280, 500);
+    chassis.moveToPoint(55, -58.8, 600, {.forwards= false}); //put mogo in the corner
+
+    chassis.moveToPose(42, -25, 0, 1000, {.minSpeed = 110, .earlyExitRange = 6});
+    chassis.moveToPose(56, 12.6, 0, 1000, {.minSpeed = 110, .earlyExitRange = 6});
+    chassis.moveToPoint(62, 58, 1000);
+
+
+
+
+
+
     
 }
 void redRush(){
@@ -277,7 +306,6 @@ void red4Ring(){//done
     chassis.moveToPose(-34.38, 17.37, 270, 3000, {.forwards = false});
     chassis.waitUntilDone();
     grab();
-    lcd::print(1, "x: %.4f, y: %.4f, thetdda: %.4f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     loadLB = true;
     chassis.turnToHeading(290, 600);
     chassis.moveToPoint(-22, 47, 2000);//ring
