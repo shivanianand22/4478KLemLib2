@@ -1,9 +1,10 @@
-#include "main.h"
+#include "../include/main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "devices.h"
 #include "auton.h"
 #include "actions.h"
 #include "lemlib/chassis/chassis.hpp"
+#include "liblvgl/llemu.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/adi.h"
 #include "pros/adi.hpp"
@@ -11,9 +12,13 @@
 #include "pros/motors.h"
 #include "pros/motors.hpp"
 #include "drive.h"
+#include "pros/rotation.hpp"
 #include <string>
+#include <sys/signal.h>
 using namespace pros;
 using namespace lemlib;
+
+
 
 
 
@@ -24,21 +29,26 @@ using namespace lemlib;
  * to keep execution time for this mode under a few seconds.
  */
 
+//Task colorTask(intakeColor, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls color sort" );
+
 void initialize() {
+	
 	lcd::initialize();
 	chassis.calibrate();
-    imu.reset();
-    Rotation rotation_sensor(10);
+	imu.reset();
 	lcd::set_text(1, "Press center button to select autonomous");
 	lcd::register_btn1_cb(autonSelector);
+  lcd::register_btn0_cb(reverseAutonSelector);
+  lcd::register_btn2_cb(placeMogoToggle);
 	mArm.set_gearing(pros::E_MOTOR_GEARSET_36);
 	Clamper.set_value(LOW);
 	mArm.set_brake_mode(MotorBrake::hold);
 	Task armTask(moveArm, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls arm tasks" );
-    rotation_sensor.reset_position();
-    rotation_sensor.set_position(0);
-    //rotation_sensor.reverse();
-
+	rotation_sensor.set_position(0);
+	selection--;
+	autonSelector();
+	
+		
 }
 
 /**
@@ -48,6 +58,8 @@ void initialize() {
  */
 void disabled() {
 	pros::lcd::register_btn1_cb(autonSelector);
+  pros::lcd::register_btn0_cb(reverseAutonSelector);
+  pros::lcd::register_btn2_cb(placeMogoToggle);
     
 }
 
@@ -79,16 +91,12 @@ ASSET(rightAwpp1_txt);
 
 
 
-//FRONT OF THE ROBOT IS THE INTAKE
-
-
-
 void autonomous() {
+	
 	controller.rumble("-");
 	mLefts.tare_position();
 	mRights.tare_position();
-    release();
-    
+	startTime = pros::millis();
 	switch (selection) {
 	case 0:
 		redRight();
@@ -105,8 +113,20 @@ void autonomous() {
 	case 4:
 		progSkills();
 		break;
+	case 5:
+		redRush();
+		break;
+	case 6:
+		blueRush();
+		break;
+	case 7:
+		red4Ring();
+		break;
+	case 8:
+		blue4Ring();
+		break;
 	}
-	
+		
 }
 
 /**
@@ -123,10 +143,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	//colorTask.remove();
 	mIntake.set_brake_mode(MotorBrake::coast);
-	rotation_sensor.reset_position();
-	rotation_sensor.set_position(0);
-	rotation_sensor.reverse();
 
 	while (true) {
 		controller.set_text(0, 0, std :: to_string(mIntake.get_actual_velocity()));
@@ -140,13 +158,26 @@ void opcontrol() {
 	drive();
 
 	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){toggleClamp();}
-	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){primeArm = true;}
-	if(controller.get_digital(E_CONTROLLER_DIGITAL_L1)){neutralArm = true;}
-	if(controller.get_digital(E_CONTROLLER_DIGITAL_L2)){lowerArm = true;}
-	if(controller.get_digital(E_CONTROLLER_DIGITAL_UP)){allainceArm = true;}
+	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)){target = armTargets[0];}
+	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){target = armTargets[1];}
+	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)){target = armTargets[2];}
+	if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){target = armTargets[3];}
 
-	if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){    
-		mIntake.move(127);//move intake forward
+
+	if(controller.get_digital(E_CONTROLLER_DIGITAL_R1)){  
+
+		if(primed){ //if the arm is primed
+			if(sDist.get_distance() > 50 && sDist.get_distance() < 70){
+				mIntake.move(0); //stop the arm when ring is in lady brown
+			}
+			else{
+				mIntake.move(127); //move the arm until ring is in lady brown
+			}
+		}
+		else{
+			mIntake.move(127);
+		}
+
 	} 
 	else if(controller.get_digital(E_CONTROLLER_DIGITAL_R2)){   
 		mIntake.move(-127);//move intake backward
@@ -154,58 +185,23 @@ void opcontrol() {
 	else{   
 		mIntake.brake();//stop intake
 	}    
-
-	lcd::print(1, "currPos: %i", rotation_sensor.get_position());
-	
-	
-
-	
-		
-/*	
-		if(controller.get_digital(E_CONTROLLER_DIGITAL_L1)){
-			//mArm.move(-127);
-            armSpeed = armScorePID.update(rotation_sensor.get_position()/100.0 - -810);
-			mIntake.move(60);
-            delay(10);
-            std :: clamp(int(scoreError), -600 , 600);
-            if(rotation_sensor.get_position() > -790 * 100){ //this line
-			    mArm.move_velocity(-armSpeed);
-			    mArm.move_velocity(-armSpeed);
-            }
-            
-		}
-		else if(controller.get_digital(E_CONTROLLER_DIGITAL_L2)){
-			mArm.move(60);
+	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)){
+		if(!blueAllaince){
+			controller.set_text(1,1,"BLUE TEAM");
+			blueAllaince = true;
 		}
 		else{
-			mArm.brake();
+			controller.set_text(1,1,"RED TEAM");
+			blueAllaince = false;
 		}
-		
-		if (run){ 
-            //possible PID for arm
-            setError = rotation_sensor.get_position()/100.0 - -119; //change for macro
-            //possible PID for arm
-            setError = rotation_sensor.get_position()/100.0 - -119; //change for macro
-            armSpeed = armSetPid.update(setError);
-			std :: clamp(int(armSpeed), -600, 600);
-            if(fabs(setError) > 1){
-				//mArm.move(80);
-                mArm.move_velocity(-armSpeed);
-                std :: cout << "Running";
-				//mArm.move(-80);
-                
-			}
-            
-            
-		}
-		
-		if(fabs(setError) < 1){ 
-			run = false;
-		}
-		
-        controller.set_text(0, 0, "Positon: %f", (rotation_sensor.get_position()));
-        lcd::print(1, "value: %f", armSpeed);
-        //controller.set_text(0,0,"%d",rotation_sensor.get_position() );*/
+	}
+	
+	
+
+	
+		    
+
+        lcd::print(2, "sensor: %d",rotation_sensor.get_position()/100.0);
 	}
 }
 
