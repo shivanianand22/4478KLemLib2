@@ -1,7 +1,7 @@
 #include "devices.h"
 #include "pros/abstract_motor.hpp"
 #include "pros/llemu.hpp"
-double armTargets[] = {10, 45,165,  228};
+double armTargets[] = {10, 47,165,  228};
 double target = 0;
 bool loadLB= false;
 bool blueAllaince= false;

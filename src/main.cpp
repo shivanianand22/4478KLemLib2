@@ -41,7 +41,7 @@ void initialize() {
   lcd::register_btn0_cb(reverseAutonSelector);
   lcd::register_btn2_cb(placeMogoToggle);
 	mArm.set_gearing(pros::E_MOTOR_GEARSET_36);
-	Clamper.set_value(LOW);
+	release();
 	mArm.set_brake_mode(MotorBrake::hold);
 	Task armTask(moveArm, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls arm tasks" );
 	rotation_sensor.set_position(0);
@@ -60,6 +60,7 @@ void disabled() {
 	pros::lcd::register_btn1_cb(autonSelector);
   pros::lcd::register_btn0_cb(reverseAutonSelector);
   pros::lcd::register_btn2_cb(placeMogoToggle);
+  release();
     
 }
 

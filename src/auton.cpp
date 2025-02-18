@@ -4,6 +4,7 @@
 #include "liblvgl/llemu.hpp"
 #include "actions.h"
 #include "pros/abstract_motor.hpp"
+#include "pros/motors.h"
 #include "pros/rtos.h"
 #include <cstdio>
 #include <ctime>
@@ -91,15 +92,16 @@ void blueLeft(){ //mogo side
     // }
 void redLeft(){ //ring side done
     chassis.setPose(-52.167, 23.792, 270);
-    mIntake.move(127); 
-    chassis.moveToPoint(-31.16,  23.792, 1000, {.forwards = false});//mogo
+    chassis.moveToPoint(-30.16,  23.792, 1000, {.forwards = false});//mogo
     chassis.waitUntilDone();
+    delay(50);
     grab();
+    mIntake.move(127); 
     chassis.turnToHeading(65, 500);
     chassis.moveToPose(-7.66,55,360, 4000, {.lead=.6});//rings
     chassis.swingToHeading(190, DriveSide::LEFT, 1000);
     chassis.moveToPoint(-28.8, 40, 500);
-    chassis.moveToPoint(-36, 14, 3000); //touch bar
+    chassis.moveToPoint(-20, 14, 3000); //touch bar
     chassis.waitUntilDone();
     target = armTargets[2];
 }
@@ -121,23 +123,26 @@ void blueRight(){ //ring side
 }
 
 void progSkills(){
+    mArm.set_brake_mode(MotorBrake::brake);
     chassis.setPose(-60.317, 8.863, 225);
     target = armTargets[3];//scores allaince stake
+    mIntake.move(127);
     delay(500);
     chassis.moveToPoint(-54.67, 12.81, 250, {.forwards= false,.minSpeed = 50});//grab mogo
     chassis.waitUntilDone();
     grab();
-    chassis.moveToPoint(-34.38, 17.37,  1000, {.minSpeed =80});//grab ring
-    chassis.moveToPose(-3, 30, 45, 1000, {.minSpeed = 100, .earlyExitRange = 6}); //avoid the middleBar
+    chassis.moveToPoint(-34.38, 17.37,  1500, {.minSpeed =80});//grab ring
+    chassis.moveToPose(-3, 39, 45, 1000, {.minSpeed = 100, .earlyExitRange = 6}); //avoid the middleBar
     chassis.waitUntilDone();
     loadLB= true; //next ring going into lb
-    chassis.moveToPoint(16.5, 41.1, 1000);//pick up ring
-    chassis.moveToPoint(-2, 33, 1000, {.forwards= false});
-    chassis.turnToHeading(0, 500);
+    chassis.moveToPose(23, 43.1, 90,2000);//pick up ring
+    chassis.moveToPoint(0, 30, 1000, {.forwards= false});//allign with wall stake
+    chassis.turnToHeading(0, 700);//turn towards stake
     chassis.waitUntilDone();
-    chassis.moveToPoint(-2, 59, 1500);
-    target = armTargets[2];
-    delay(50);
+    chassis.moveToPose(chassis.getPose().x, 59,0, 4500);//move to stake
+    delay(800);
+    target = armTargets[2];//moves up lb
+    delay(100);
     mIntake.move(127);
     chassis.waitUntilDone();
     chassis.setPose(0,62.7,0); //reset pose after alligning with wall stake
@@ -246,7 +251,7 @@ void redRush(){
 void blueRush(){
     target = rotation_sensor.get_position()/100.0;
     chassis.setPose(-55.5, 64.1, 90);
-    chassis.moveToPose(-17.6, 58.5, 115, 900, {.forwards= true, .lead = 0.35,.minSpeed = 100,.earlyExitRange = 8});//get to mogo 
+    chassis.moveToPose(-16.6, 58.5, 120, 930, {.forwards= true, .lead = 0.35,.minSpeed = 100,.earlyExitRange = 8});//get to mogo 
     delay(500);
     target= armTargets[3];
     chassis.waitUntilDone();
@@ -309,7 +314,7 @@ void red4Ring(){//done
     loadLB = true;
     chassis.turnToHeading(290, 600);
     chassis.moveToPoint(-22, 47, 2000);//ring
-    chassis.moveToPose(-11.18, 56.11, 47, 2500);//wall stake
+    chassis.moveToPose(-11.18, 56.11, 55, 2500);//wall stake
     chassis.waitUntilDone();
     while(loadLB && (millis() - startTime)/1000 < 10){delay(20);}
     if(loadLB){loadLB = false;} //if it got timed out end the loading process
