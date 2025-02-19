@@ -124,7 +124,7 @@ void blueRight(){ //ring side
 
 void progSkills(){
     mArm.set_brake_mode(MotorBrake::brake);
-    chassis.setPose(-60.317, 8.863, 225);
+    chassis.setPose(-61.317, 7.863, 225);
     target = armTargets[3];//scores allaince stake
     mIntake.move(127);
     delay(500);
@@ -140,10 +140,11 @@ void progSkills(){
     chassis.turnToHeading(0, 700);//turn towards stake
     chassis.waitUntilDone();
     chassis.moveToPose(chassis.getPose().x, 59,0, 4500);//move to stake
+    target= 70; //get ring away from Intake
+    mIntake.move(127);
     delay(800);
     target = armTargets[2];//moves up lb
     delay(100);
-    mIntake.move(127);
     chassis.waitUntilDone();
     chassis.setPose(0,62.7,0); //reset pose after alligning with wall stake
     //checkpoint can be used for testing
@@ -155,7 +156,7 @@ void progSkills(){
     chassis.turnToHeading(100, 500);
     chassis.moveToPoint(-52, 61.7, 600, {.forwards = false});
     chassis.waitUntilDone();
-    release(); //drop goal in the corner
+    release(); //drop 1st goal in the corner
 
     chassis.moveToPoint(-41.1, 58.7, 300);
     chassis.moveToPoint(-45.8, 13.3, 4000,{.forwards=false});//pick up second mogo
@@ -164,14 +165,15 @@ void progSkills(){
     chassis.moveToPose(20.7, -47.4,90, 2500); //pick up lb ring
     delay(1000);
     loadLB=true;
-    chassis.moveToPoint(0, -45.32, 1000);  
-    chassis.turnToHeading(270, 500);//line up with the stake
-    chassis.moveToPoint(0, -66, 1000);
+    chassis.moveToPoint(0, -45.32, 1000, {.forwards=false});  
+    chassis.turnToHeading(180, 500);//line up with the stake
+    chassis.moveToPoint(chassis.getPose().x, -66, 1000);
+    target = 80;
+    delay(600);
     target = armTargets[2];//wall stake
-    delay(50);
     mIntake.move(127);
     chassis.waitUntilDone();
-    chassis.setPose(0,-62.7,0); //reset pose after alligning with wall stake
+    chassis.setPose(0,-62.7,180); //reset pose after alligning with wall stake
     //checkpoint can be used for testing
     chassis.moveToPoint(0, 47.5, 1000, {.forwards= false});
     target = armTargets[0];
@@ -280,7 +282,7 @@ void blueRush(){
 
 }
 void blue4Ring(){
-    chassis.setPose(-60.317, -8.863, 315);
+    chassis.setPose(-61.317, -7.863, 315);
     target = armTargets[3];//scores allaince stake
     delay(600);
     chassis.moveToPose(-34.38, -18.37, 270, 3000, {.forwards = false}); //mogo
@@ -290,7 +292,7 @@ void blue4Ring(){
     loadLB = true;
     chassis.turnToHeading(250, 600);
     chassis.moveToPoint(-22, -47, 2000);//ring
-    chassis.moveToPose(-11.18, -59.11, 133, 2500);//wall stake
+    chassis.moveToPose(-11.18, -59.11, 205, 2500);//wall stake
     chassis.waitUntilDone();
     while(loadLB && (millis() - startTime)/1000 < 10){delay(20);}
     if(loadLB){loadLB = false;} //if it got timed out end the loading process
@@ -305,7 +307,7 @@ void blue4Ring(){
     target= armTargets[2];
 }
 void red4Ring(){//done
-    chassis.setPose(-60.317, 8.863, 225);
+    chassis.setPose(-61.317, 7.863, 225);
     target = armTargets[3];//scores allaince stake
     delay(600);
     chassis.moveToPose(-34.38, 17.37, 270, 3000, {.forwards = false});
