@@ -8,7 +8,7 @@
 #include "pros/rtos.h"
 #include <cstdio>
 #include <ctime>
-int selection = 6;
+int selection = 4;
 bool cornerMogo= false;
 double startTime = 0;
 /*
@@ -136,30 +136,37 @@ void progSkills(){
     chassis.waitUntilDone();
     loadLB= true; //next ring going into lb
     chassis.moveToPose(23, 43.1, 90,2000);//pick up ring
-    chassis.moveToPoint(0, 30, 1000, {.forwards= false});//allign with wall stake
+    chassis.moveToPoint(1, 30, 1000, {.forwards= false});//allign with wall stake
     chassis.turnToHeading(0, 700);//turn towards stake
     chassis.waitUntilDone();
-    chassis.moveToPose(chassis.getPose().x, 59,0, 4500);//move to stake
+    chassis.moveToPose(chassis.getPose().x, 59,0,3500);//move to stake
+    delay(100);
     target= 70; //get ring away from Intake
+    delay(20);
+    mIntake.move_relative(-50, 100);
+    delay(100);
     mIntake.move(127);
-    delay(800);
-    target = armTargets[2];//moves up lb
+    delay(1000);
+    target = armTargets[2] + 30;//moves up lb
     delay(100);
     chassis.waitUntilDone();
     chassis.setPose(0,62.7,0); //reset pose after alligning with wall stake
     //checkpoint can be used for testing
     chassis.moveToPoint(0, 47.5, 1000, {.forwards= false});
     target = armTargets[0];
-    chassis.moveToPoint(-55., 47.3, 2500);//pick up the three rings
-    chassis.turnToPoint(-45.8, 60, 400); 
-    chassis.moveToPoint(-45.8, 60, 1000); //pick up last ring
-    chassis.turnToHeading(100, 500);
+    chassis.turnToHeading(270, 500);
+    chassis.moveToPoint(-55., 47.3, 3500, {.maxSpeed = 50});//pick up the three rings
+    chassis.turnToPoint(-49.8, 60, 400); 
+    chassis.moveToPoint(-49.8, 60, 1000); //pick up last ring
+    chassis.turnToHeading(110, 500);
     chassis.moveToPoint(-52, 61.7, 600, {.forwards = false});
     chassis.waitUntilDone();
     release(); //drop 1st goal in the corner
 
     chassis.moveToPoint(-41.1, 58.7, 300);
-    chassis.moveToPoint(-45.8, 13.3, 4000,{.forwards=false});//pick up second mogo
+    chassis.moveToPoint(-49, -13.3, 10000,{.forwards=false});//pick up second mogo
+    chassis.waitUntilDone();
+    grab();
     chassis.moveToPoint(-27, -24, 1000);//pick up ring
     chassis.waitUntilDone();
     chassis.moveToPose(20.7, -47.4,90, 2500); //pick up lb ring
