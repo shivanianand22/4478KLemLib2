@@ -92,7 +92,7 @@ void blueLeft(){ //mogo side
     // }
 void redLeft(){ //ring side done
     chassis.setPose(-52.167, 23.792, 270);
-    chassis.moveToPoint(-30.16,  23.792, 1000, {.forwards = false});//mogo
+    chassis.moveToPoint(-28.16,  23.792, 1000, {.forwards = false});//mogo
     chassis.waitUntilDone();
     delay(50);
     grab();
@@ -100,7 +100,15 @@ void redLeft(){ //ring side done
     chassis.turnToHeading(65, 500);
     chassis.moveToPose(-7.66,55,360, 4000, {.lead=.6});//rings
     chassis.swingToHeading(190, DriveSide::LEFT, 1000);
+    chassis.waitUntilDone();
+    loadLB=true;
     chassis.moveToPoint(-28.8, 40, 500);
+    chassis.moveToPose(-61.456, 8.013, 225, 2500);
+    chassis.waitUntilDone();
+    target = armTargets[3];
+    delay(500);
+    chassis.moveToPoint(-59.456, 10.013, 150);
+    chassis.turnToHeading(110, 500);
     chassis.moveToPoint(-20, 14, 3000); //touch bar
     chassis.waitUntilDone();
     target = armTargets[2];
@@ -110,14 +118,20 @@ void redLeft(){ //ring side done
 void blueRight(){ //ring side
     chassis.setPose(-52.167, -23.792, 270);
     mIntake.move(127); 
-    chassis.moveToPoint(-31.16,  -23.792, 1000, {.forwards = false});//mogo
+    chassis.moveToPoint(-28.16,  -23.792, 1000, {.forwards = false});//mogo
     chassis.waitUntilDone();
     grab();
     chassis.turnToHeading(115, 500);
     chassis.moveToPose(.5,-55,180, 4000, {.lead=.6});//rings
     chassis.swingToHeading(350, DriveSide::RIGHT, 1000);
-    chassis.moveToPoint(-20.8, -40, 500);
-    chassis.moveToPoint(-27, -14, 3000); //touch bar
+    chassis.moveToPoint(-20.8, -40, 500); //ring
+    chassis.moveToPose(-61.456, -8.013, 225, 2500);
+    chassis.waitUntilDone();
+    target = armTargets[3];
+    delay(500);
+    chassis.moveToPoint(-59.456, -10.013, 150);
+    chassis.turnToHeading(70, 500);
+    chassis.moveToPoint(-20, -14, 3000); //touch bar
     chassis.waitUntilDone();
     target = armTargets[2];
 }
@@ -155,7 +169,7 @@ void progSkills(){
     chassis.moveToPoint(0, 47.5, 1000, {.forwards= false});
     target = armTargets[0];
     chassis.turnToHeading(270, 500);
-    chassis.moveToPoint(-55., 47.3, 3500, {.maxSpeed = 50});//pick up the three rings
+    chassis.moveToPoint(-60., 47.3, 3500, {.maxSpeed = 50});//pick up the three rings
     chassis.turnToPoint(-49.8, 60, 400); 
     chassis.moveToPoint(-49.8, 60, 1000); //pick up last ring
     chassis.turnToHeading(110, 500);
@@ -164,7 +178,7 @@ void progSkills(){
     release(); //drop 1st goal in the corner
 
     chassis.moveToPoint(-41.1, 58.7, 300);
-    chassis.moveToPoint(-49, -13.3, 10000,{.forwards=false});//pick up second mogo
+    chassis.moveToPose(-49, -13.3,0, 10000,{.forwards=false});//pick up second mogo
     chassis.waitUntilDone();
     grab();
     chassis.moveToPoint(-27, -24, 1000);//pick up ring
@@ -172,23 +186,27 @@ void progSkills(){
     chassis.moveToPose(20.7, -47.4,90, 2500); //pick up lb ring
     delay(1000);
     loadLB=true;
-    chassis.moveToPoint(0, -45.32, 1000, {.forwards=false});  
+    chassis.moveToPoint(-4, -45.32, 1000, {.forwards=false});  
     chassis.turnToHeading(180, 500);//line up with the stake
     chassis.moveToPoint(chassis.getPose().x, -66, 1000);
-    target = 80;
-    delay(600);
-    target = armTargets[2];//wall stake
+    target= 70; //get ring away from Intake
+    delay(20);
+    mIntake.move_relative(-50, 100);
+    delay(100);
     mIntake.move(127);
+    delay(1000);
+    target = armTargets[2] + 30;//moves up lb
+    delay(100);
     chassis.waitUntilDone();
     chassis.setPose(0,-62.7,180); //reset pose after alligning with wall stake
     //checkpoint can be used for testing
-    chassis.moveToPoint(0, 47.5, 1000, {.forwards= false});
+    chassis.moveToPoint(0, -47.5, 1000, {.forwards= false});
     target = armTargets[0];
-    chassis.moveToPoint(-55., 47.3, 2500);//pick up the three rings
-    chassis.turnToPoint(-45.8, 60, 400); 
-    chassis.moveToPoint(-45.8, 60, 1000); //pick up last ring
-    chassis.turnToHeading(80, 500);
-    chassis.moveToPoint(-52, 61.7, 600, {.forwards = false});
+    chassis.moveToPoint(-60., -47.3, 2500);//pick up the three rings
+    chassis.turnToPoint(-49.8, -60, 400); 
+    chassis.moveToPoint(-49.8, -60, 1000); //pick up last ring
+    chassis.turnToHeading(70, 500);
+    chassis.moveToPoint(-52, -61.7, 600, {.forwards = false});
     chassis.waitUntilDone();
     release(); //drop goal in the corner
 
