@@ -8,7 +8,7 @@
 #include "pros/rtos.h"
 #include <cstdio>
 #include <ctime>
-int selection = 4;
+int selection = 1;
 bool cornerMogo= false;
 double startTime = 0;
 /*
@@ -96,18 +96,19 @@ void redLeft(){ //ring side done
     chassis.waitUntilDone();
     delay(50);
     grab();
-    mIntake.move(127); 
+    mIntake.move(127);
+    delay(50); 
     chassis.turnToHeading(65, 500);
-    chassis.moveToPose(-7.66,55,360, 4000, {.lead=.6});//rings
+    chassis.moveToPose(-9.2,55,360, 4000, {.lead=.6,});//rings
     chassis.swingToHeading(190, DriveSide::LEFT, 1000);
     chassis.waitUntilDone();
-    loadLB=true;
     chassis.moveToPoint(-28.8, 40, 500);
+    loadLB=true;
     chassis.moveToPose(-61.456, 8.013, 225, 2500);
     chassis.waitUntilDone();
     target = armTargets[3];
     delay(500);
-    chassis.moveToPoint(-59.456, 10.013, 150);
+    chassis.moveToPoint(-56.456, 13.013, 1000, {.forwards = false});
     chassis.turnToHeading(110, 500);
     chassis.moveToPoint(-20, 14, 3000); //touch bar
     chassis.waitUntilDone();
@@ -137,6 +138,7 @@ void blueRight(){ //ring side
 }
 
 void progSkills(){
+    target=47;
     mArm.set_brake_mode(MotorBrake::brake);
     chassis.setPose(-61.317, 7.863, 225);
     target = armTargets[3];//scores allaince stake
@@ -177,18 +179,20 @@ void progSkills(){
     chassis.waitUntilDone();
     release(); //drop 1st goal in the corner
 
+
     chassis.moveToPoint(-41.1, 58.7, 300);
-    chassis.moveToPose(-49, -13.3,0, 10000,{.forwards=false});//pick up second mogo
+    chassis.moveToPose(-55, -13.3,0, 4000,{.forwards=false});//pick up second mogo
     chassis.waitUntilDone();
     grab();
     chassis.moveToPoint(-27, -24, 1000);//pick up ring
     chassis.waitUntilDone();
-    chassis.moveToPose(20.7, -47.4,90, 2500); //pick up lb ring
+    chassis.moveToPose(19.7, -47.4,90, 2500); //pick up lb ring
     delay(1000);
     loadLB=true;
-    chassis.moveToPoint(-4, -45.32, 1000, {.forwards=false});  
+    chassis.moveToPoint(-9.5, -40.32, 1500, {.forwards=false});  
     chassis.turnToHeading(180, 500);//line up with the stake
-    chassis.moveToPoint(chassis.getPose().x, -66, 1000);
+    chassis.waitUntilDone();
+    chassis.moveToPoint(chassis.getPose().x, -66, 2000);
     target= 70; //get ring away from Intake
     delay(20);
     mIntake.move_relative(-50, 100);
@@ -200,15 +204,16 @@ void progSkills(){
     chassis.waitUntilDone();
     chassis.setPose(0,-62.7,180); //reset pose after alligning with wall stake
     //checkpoint can be used for testing
-    chassis.moveToPoint(0, -47.5, 1000, {.forwards= false});
+    chassis.moveToPoint(0, -48.5, 1000, {.forwards= false});
+    chassis.turnToHeading(270, 500);
     target = armTargets[0];
-    chassis.moveToPoint(-60., -47.3, 2500);//pick up the three rings
-    chassis.turnToPoint(-49.8, -60, 400); 
-    chassis.moveToPoint(-49.8, -60, 1000); //pick up last ring
+    chassis.moveToPoint(-60, chassis.getPose().y , 2500, {.maxSpeed=70});//pick up the three rings
+    chassis.turnToPoint(-51.8, -55, 400); 
+    chassis.moveToPoint(-51.8, -55, 1000); //pick up last ring
     chassis.turnToHeading(70, 500);
-    chassis.moveToPoint(-52, -61.7, 600, {.forwards = false});
+    chassis.moveToPoint(-52, -59.7, 600, {.forwards = false});
     chassis.waitUntilDone();
-    release(); //drop goal in the corner
+    release(); //drop 2nd goal in the corner
 
     mIntake.set_brake_mode(MotorBrake::coast);
     chassis.moveToPose(-23, -23,45, 1000,{.minSpeed= 100, .earlyExitRange=4});
@@ -221,8 +226,8 @@ void progSkills(){
     chassis.moveToPoint(40.87, 8.1, 1500, {.forwards = false});
     chassis.waitUntilDone();
     grab();
-    chassis.moveToPoint(62, 0, 1000);
-    chassis.turnToPoint(69, 0, 500);
+    chassis.moveToPoint(58, 0, 1000);
+    chassis.turnToPoint(69, 4, 500);
     chassis.waitUntilDone();
     target= armTargets[3]; //score allaince stake
     delay(500);

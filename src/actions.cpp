@@ -16,6 +16,7 @@ void release(){
 }
 void moveArm(void* param){
 	rotation_sensor.reverse();
+	rotation_sensor.set_position(0);
 	double setError = 0;
 	double armSpeed = 0;
 	while(true){

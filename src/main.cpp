@@ -32,7 +32,6 @@ using namespace lemlib;
 //Task colorTask(intakeColor, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls color sort" );
 
 void initialize() {
-	
 	lcd::initialize();
 	chassis.calibrate();
 	imu.reset();
@@ -44,7 +43,6 @@ void initialize() {
 	release();
 	mArm.set_brake_mode(MotorBrake::hold);
 	Task armTask(moveArm, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT,"controls arm tasks" );
-	rotation_sensor.set_position(0);
 	selection--;
 	autonSelector();
 	
